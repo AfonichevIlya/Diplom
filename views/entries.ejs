@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+</head>
+
+
+
+
+<body>
+    <header> <%- include ('./partials/header') %></header>
+    
+  
+      <h1>VibeCircle</h1>
+    </div>
+    <div class="typewriter">
+      <h4 id="typewriter-text"></h4>
+      
+      
+      <% if (locals.user) { %>
+        <div class="container">
+          <h2 style="color: wheat; text-align: center; font-size: 40px;">ЛЕНТА ПОСТОВ</h2>
+          <% entries.forEach((entry)=>{ %>
+            <div class="card entry" style="width: max-content;margin-left: auto;margin-right: auto; margin-top: 3%;
+        ">
+            <div class="card-body ">
+              <h5 class="card-title"><%= entry.title %></h5>
+              <p class="card-text">
+                <%= entry.content %> 
+              </p>
+            </br>
+                <% if(entry.image){ %>
+                  <img src="/images/<%= entry.image %>" alt="Post Image" style="min-width: min-content;">
+                  <% } %>
+                </br>
+                <div style="width: max-content;">
+                  <h6>Запостил:   <%= entry.username %> </h6>   
+                  <p><%= timeSince(entry.created_at) %></p>
+                </div>             
+                <% if(locals.user && locals.user.role === 'user' && entry.username === locals.user.name){ %>
+                  <button id="a3">
+                    <a href="/update/<%= entry.id %>" style="text-decoration: none; color: bisque;">
+                      Изменить
+                    </a>
+                  </button>
+                  <button id="a2" class="btn-delete" data-id="<%=entry.id%>">
+                    Удалить
+                  </button>
+                  <% } %>
+                  
+                  
+                </div>
+              </div> 
+            </br>
+            <% }) %> 
+            
+          </div>
+          
+          <script>
+            document.addEventListener('click', (e)=>{
+              const id = e.target?.dataset?.id || null
+              if(id){
+                fetch(`/${id}`, {
+                  method: 'DELETE'
+                }).then(()=>{
+                  window.location.reload()
+                })
+                
+              }
+            })
+            
+            </script>
+            <footer> <%- include ('./partials/footer') %></footer>
+          <% } else { %>
+            <div id="typewriter2"><h5> Пожалуйста, войдите или зарегистрируйтесь, чтобы увидеть контент</h5></div>
+            <script>
+              document.addEventListener('DOMContentLoaded', function() {
+                const typewriterText = document.getElementById('typewriter-text');
+                const text = "Добро пожаловать в VibeCircle!  В VibeCircle мы не просто социальная платформа, мы движение, празднующее позитив, креативность и настоящие связи!";
+                
+                let index = 0;
+                
+                const cursor = document.createElement('span');
+                cursor.className = 'cursor';
+                cursor.textContent = '|';
+                typewriterText.appendChild(cursor);
+                
+                function type() {
+                  if (index < text.length) {
+      // Remove cursor before adding new character
+      typewriterText.removeChild(cursor);
+      // Add next character
+      typewriterText.textContent += text[index];
+      // Re-append cursor after new character
+      typewriterText.appendChild(cursor);
+      index++;
+      // Randomize the typing speed between 50ms and 150ms.
+      setTimeout(type, Math.random() * (40 - 10) + 30);
+    }
+  }
+  
+  // Start typing
+  type();
+});
+
+</script>
+
+<% } %>
+</body>
+</html>

@@ -1,0 +1,22 @@
+* {
+  margin: 0;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90vw;
+  height: 90vh;
+}
+.container__error-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-right: 50px;
+}
+.error-body__head {
+  font-size: 24px;
+}
+.error-body__main {
+  font-size: 20px;
+}

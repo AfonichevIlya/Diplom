@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Google Web Designer 16.0.1.1115">
+  <meta name="format" content="gwd-video">
+  <meta name="subformat" content="animated-gif">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="gwdpage_style.css" rel="stylesheet" data-version="13" data-exports-type="gwd-page">
+  <link href="gwdpagedeck_style.css" rel="stylesheet" data-version="14" data-exports-type="gwd-pagedeck">
+  <link href="gwdgooglead_style.css" rel="stylesheet" data-version="9" data-exports-type="gwd-google-ad">
+  <link href="gwdimage_style.css" rel="stylesheet" data-version="17" data-exports-type="gwd-image">
+  <style id="gwd-text-style">
+    p {
+      margin: 0px;
+    }
+    h1 {
+      margin: 0px;
+    }
+    h2 {
+      margin: 0px;
+    }
+    h3 {
+      margin: 0px;
+    }
+  </style>
+  <style id="gwd-video-style">
+    body {
+      overflow: hidden;
+    }
+    gwd-video-track {
+      display: block;
+      isolation: isolate;
+      overflow: hidden;
+      position: absolute;
+    }
+    gwd-av-transition {
+      display: none;
+    }
+    gwd-av-clip, gwd-av-clip >:not(gwd-av-transition) {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0px;
+      top: 0px;
+    }
+    gwd-av-clip >:not(gwd-av-transition) {
+      object-fit: cover;
+    }
+    [clip-scaling="contain"] gwd-av-clip >:not(gwd-av-transition) {
+      object-fit: contain;
+    }
+    [clip-scaling="stretch"] gwd-av-clip >:not(gwd-av-transition) {
+      object-fit: fill;
+    }
+    [clip-scaling="none"] gwd-av-clip >:not(gwd-av-transition) {
+      object-fit: none;
+    }
+  </style>
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+    }
+    .gwd-page-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .gwd-page-content {
+      background-color: transparent;
+      transform: perspective(1400px) matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+      transform-style: preserve-3d;
+      position: absolute;
+    }
+    .gwd-page-content * {
+      transform-style: preserve-3d;
+    }
+    .gwd-page-wrapper {
+      background-color: rgb(255, 255, 255);
+      position: absolute;
+      transform: translateZ(0px);
+    }
+    .gwd-page-size {
+      width: 120px;
+      height: 100px;
+    }
+    .gwd-image-78v8 {
+      position: absolute;
+      width: 367px;
+      height: 137px;
+      left: -31px;
+      top: 0px;
+    }
+    .gwd-p-eaj3 {
+      position: absolute;
+      color: rgb(233, 232, 232);
+      left: -65px;
+      top: 68px;
+      transform: translate3d(0px, 0px, 0px);
+    }
+    .gwd-p-10e3 {
+      position: absolute;
+      color: rgb(233, 232, 232);
+      left: 101px;
+      top: -29px;
+      transform: translate3d(0px, 0px, 0px);
+    }
+    .gwd-p-t98e {
+      position: absolute;
+      color: rgb(233, 232, 232);
+      left: 336px;
+      top: 68px;
+      transform: translate3d(0px, 0px, 0px);
+    }
+    .gwd-p-17lc {
+      position: absolute;
+      left: 101px;
+      top: 152px;
+      color: rgb(233, 232, 232);
+      transform: translate3d(0px, 0px, 0px);
+    }
+    @keyframes gwd-gen-153ogwdanimation_gwd-keyframes {
+      0% {
+        transform: translate3d(0px, 0px, 0px);
+        animation-timing-function: linear;
+      }
+      4% {
+        transform: translate3d(65px, 0px, 0px);
+        animation-timing-function: linear;
+      }
+      12% {
+        transform: translate3d(65px, 0px, 0px);
+        animation-timing-function: linear;
+      }
+      100% {
+        transform: translate3d(65px, 0px, 0px);
+        animation-timing-function: linear;
+      }
+    }
+    #page1.gwd-play-animation .gwd-gen-153ogwdanimation {
+      animation: 5s linear 0s 1 normal forwards running gwd-gen-153ogwdanimation_gwd-keyframes;
+    }
+    @keyframes gwd-gen-1j8mgwdanimation_gwd-keyframes {
+      0% {
+        transform: translate3d(0px, 0px, 0px);
+        animation-timing-function: linear;
+      }
+      78.125% {
+        transform: translate3d(0px, 0px, 0px);
+        animation-timing-function: linear;
+      }
+      100% {
+        transform: translate3d(-67px, 98px, 0px);
+        animation-timing-function: linear;
+      }
+    }
+    #page1.gwd-play-animation .gwd-gen-1j8mgwdanimation {
+      animation: 6.4s linear 0s 1 normal forwards running gwd-gen-1j8mgwdanimation_gwd-keyframes;
+    }
+    @keyframes gwd-gen-145cgwdanimation_gwd-keyframes {
+      0% {
+        transform: translate3d(0px, 0px, 0px);
+        animation-timing-function: linear;
+      }
+      65.7895% {
+        transform: translate3d(0px, 0px, 0px);
+        animation-timing-function: linear;
+      }
+      100% {
+        transform: translate3d(-204px, 1px, 0px);
+        animation-timing-function: linear;
+      }
+    }
+    #page1.gwd-play-animation .gwd-gen-145cgwdanimation {
+      animation: 7.6s linear 0s 1 normal forwards running gwd-gen-145cgwdanimation_gwd-keyframes;
+    }
+    @keyframes gwd-gen-bbfggwdanimation_gwd-keyframes {
+      0% {
+        transform: translate3d(0px, 0px, 0px);
+        animation-timing-function: linear;
+      }
+      83.3333% {
+        transform: translate3d(0px, 0px, 0px);
+        animation-timing-function: linear;
+      }
+      100% {
+        transform: translate3d(84px, -61px, 0px);
+        animation-timing-function: linear;
+      }
+    }
+    #page1.gwd-play-animation .gwd-gen-bbfggwdanimation {
+      animation: 6s linear 0s 1 normal forwards running gwd-gen-bbfggwdanimation_gwd-keyframes;
+    }
+  </style>
+  <script data-source="gwd_webcomponents_v1_min.js" data-version="2" data-exports-type="gwd_webcomponents_v1" src="gwd_webcomponents_v1_min.js"></script>
+  <script data-source="gwdpage_min.js" data-version="13" data-exports-type="gwd-page" src="gwdpage_min.js"></script>
+  <script data-source="gwdpagedeck_min.js" data-version="14" data-exports-type="gwd-pagedeck" src="gwdpagedeck_min.js"></script>
+  <script data-source="https://s0.2mdn.net/ads/studio/Enabler.js" data-exports-type="gwd-google-ad" src="https://s0.2mdn.net/ads/studio/Enabler.js"></script>
+  <script data-source="gwdgooglead_min.js" data-version="9" data-exports-type="gwd-google-ad" src="gwdgooglead_min.js"></script>
+  <script data-source="gwdimage_min.js" data-version="17" data-exports-type="gwd-image" src="gwdimage_min.js"></script>
+</head>
+
+<body>
+  <gwd-google-ad id="gwd-ad" polite-load="">
+    <gwd-pagedeck class="gwd-page-container" id="pagedeck">
+      <gwd-page id="page1" class="gwd-page-wrapper gwd-page-size" data-gwd-width="120px" data-gwd-height="100px">
+        <div class="gwd-page-content gwd-page-size">
+          <gwd-video-track></gwd-video-track>
+          <gwd-image id="gwd-image_1" source="assets/Без названия (3).jpg" scaling="stretch" class="gwd-image-78v8"></gwd-image>
+          <p class="gwd-p-eaj3 gwd-gen-153ogwdanimation">ПОД</p>
+          <p class="gwd-p-10e3 gwd-gen-1j8mgwdanimation">ПИСКа</p>
+          <p class="gwd-p-t98e gwd-gen-145cgwdanimation">и</p>
+          <p class="gwd-p-17lc gwd-gen-bbfggwdanimation">лайк</p>
+        </div>
+      </gwd-page>
+    </gwd-pagedeck>
+  </gwd-google-ad>
+</body>
+
+</html>

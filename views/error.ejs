@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/bootstrap.css" />
+    <script defer src="./css/bootstrap-5.3.2/dist/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <title>Error</title>
+  </head>
+  <header><%- include('./partials/header'); %></header>
+  <body>
+    <h1>Error Page</h1>
+
+    <div class="container2">
+      <div class="container_error-body">
+        <div
+          style="
+            width: max-content;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+          "
+        >
+          <h4 class="error-body_head">Error</h4>
+          <img src="error.jpg" alt="ERROR 404" class="error-body_img" />
+          <%if(err.status === 404){%>
+
+          <img src="<%=link%>" />
+          <%}%>
+          <p class="error-body_main">Error! Please back later</p>
+        </div>
+      </div>
+    </div>
+
+    <footer><%- include('./partials/footer')%></footer>
+  </body>
+</html>

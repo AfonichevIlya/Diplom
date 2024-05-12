@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/bootstrap.css" />
+    <script defer src="./css/bootstrap-5.3.2/dist/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <title><%=title%></title>
+  </head>
+  <body>
+    <header><%- include('./partials/header'); %></header>
+    <section class="login-content">
+      <h1 class="text-center">Авторизация</h1>
+      <%- include('./partials/messages'); %>
+      <div class="container2">
+      <div class="container-fluid" style="width: 60%; margin-left: auto; margin-right: auto;">
+        
+     
+        <form class=" needs-validation" action="/login" method="post" novalidate="">
+          <div class="row g-2 g-5">
+            <div class="col-12">
+              <div class="form-floating mb-3">
+                <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="loginForm[email]"
+                placeholder="name@email.com"
+                required=""
+                />
+                <label for="validationCustom01">Email</label>
+                <div class="invalid-feedback">
+                  Пожалуйста, введите ваш email.
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row g-2 g-5">
+            <div class="col-12">
+              <div class="form-floating mb-3">
+                <input
+                type="password"
+                class="form-control pas"
+                id="password"
+                name="loginForm[password]"
+                placeholder="Введите пароль"
+                required=""
+                />
+                <label for="validationCustomPas">Введите пароль</label>
+                <% if (typeof errorMessage !== 'undefined') { %>
+                  <div style="color: red; margin-top: 5px;" class="error-message"><%= errorMessage %></div>
+                <% } %>
+              </div>
+              <label class="form"><input id="eye" type="checkbox" class="password-checkbox"> Показать пароль</label>  
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-12 col-sm-4 align-items-center">
+              <button id="sub" type="submit" class="btn btn-info  ">Войти</button>
+            </div>
+          </div>
+          <div class="row g-2 g-5">
+            <div class="col-12 col-sm-12" style="margin-left: 0px">
+              <a  href="/auth/yandex"><img src="/uploads/yandex.png" style="width: 10%;"></a>
+              <a  href="/auth/google"><img src="/uploads/google.png"style="width: 10%;" ></a>
+              <a  href="/auth/github"><img src="/uploads/github.png" style="width: 10%;"></a>
+              <a  href="/auth/vkontakte"><img src="/uploads/vk.png" style="width: 10%;"></a>
+            </div>
+            <div class="col-12 col-sm-6">
+              <a href="register" class="text-decoration-none">Нет аккаунта? Регистрация</a>
+             
+              </div>
+            </div>
+      
+        </div>
+        </form>
+      </section>
+      <script>
+        function show() {
+          let = document.getElementById('password');
+          let.setAttribute('type', 'text');
+        }
+        function hide() {
+          let p = document.getElementById('password');
+          p.setAttribute('type', 'password');
+        }
+        let pwShown = 0;
+        document.getElementById("eye").addEventListener("click", function () {
+          if (pwShown == 0) {
+            pwShown = 1;
+            show();
+          } else {
+            pwShown = 0;
+            hide();
+          }
+        }, false);
+        </script>
+    <footer><%- include('./partials/footer')%></footer>
+  </body>
+  </html>
+  

@@ -1,0 +1,48 @@
+{
+  "name": "7120b",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "app.js",
+    "dev": "nodemon app.js",
+    "prod": "set NODE_ENV=production && nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nu Ya",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.6",
+    "deezer-node": "^1.1.1",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
+    "express-favicon": "^2.0.4",
+    "express-session": "^1.17.3",
+    "express-validator": "^7.0.1",
+    "method-override": "^3.0.0",
+    "moment-timezone": "^0.5.44",
+    "mongoose": "^8.0.3",
+    "multer": "^1.4.5-lts.1",
+    "passport": "^0.7.0",
+    "passport-github": "^1.1.0",
+    "passport-google-oauth2": "^0.2.0",
+    "passport-jwt": "^4.0.1",
+    "passport-vkontakte": "^0.5.0",
+    "passport-yandex": "^0.0.5",
+    "sass": "^1.69.5",
+    "sequelize": "^6.37.3",
+    "socket.io": "^4.7.5",
+    "spotify-web-api-node": "^5.0.2",
+    "sqlite3": "^5.1.7",
+    "validator": "^13.11.0",
+    "winston": "^3.13.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

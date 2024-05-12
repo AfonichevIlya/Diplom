@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <h1>Список треков</h1>
+    <ul id="track-list">
+      <!-- Здесь будет список треков -->
+    </ul>
+    <h1>Избранные треки</h1>
+    <ul id="favorite-tracks">
+      <!-- Здесь будет список избранных треков -->
+    </ul>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const trackList = document.getElementById("track-list");
+        const favoriteTracks = document.getElementById("favorite-tracks");
+
+        function loadTracks() {
+          axios
+            .get("/tracks")
+            .then((response) => {
+              trackList.innerHTML = "";
+              response.data.forEach((track) => {
+                const li = document.createElement("li");
+                li.textContent = track.name;
+
+                const audio = document.createElement("audio");
+                audio.controls = true;
+                const source = document.createElement("source");
+                if (track.audio) {
+                  source.src = track.audio;
+                }
+                audio.appendChild(source);
+                li.appendChild(audio);
+
+                const addToFavoritesButton = document.createElement("button");
+                addToFavoritesButton.textContent = "Добавить в избранное";
+                addToFavoritesButton.addEventListener("click", () =>
+                  addToFavorites(track)
+                );
+                li.appendChild(addToFavoritesButton);
+
+                trackList.appendChild(li);
+              });
+            })
+            .catch((error) => console.error(error));
+        }
+
+        function addToFavorites(track) {
+          axios
+            .post("/favorites", { track })
+            .then((response) => {
+              loadFavoriteTracks();
+            })
+            .catch((error) => console.error(error));
+        }
+
+        function removeFromFavorites(trackName) {
+          axios
+            .delete(`/favorites/${trackName}`)
+            .then((response) => {
+              loadFavoriteTracks();
+            })
+            .catch((error) => console.error(error));
+        }
+
+        function loadFavoriteTracks() {
+          axios
+            .get("/favorites")
+            .then((response) => {
+              favoriteTracks.innerHTML = "";
+              response.data.forEach((track) => {
+                const li = document.createElement("li");
+                li.textContent = track.name;
+
+                const audio = document.createElement("audio");
+                audio.controls = true;
+                const source = document.createElement("source");
+                if (track.audio) {
+                  source.src = track.audio;
+                }
+                audio.appendChild(source);
+                li.appendChild(audio);
+
+                const removeFromFavoritesButton =
+                  document.createElement("button");
+                removeFromFavoritesButton.textContent = "Удалить из избранного";
+                removeFromFavoritesButton.addEventListener("click", () =>
+                  removeFromFavorites(track.name)
+                );
+                li.appendChild(removeFromFavoritesButton);
+
+                favoriteTracks.appendChild(li);
+              });
+            })
+            .catch((error) => console.error(error));
+        }
+
+        loadTracks();
+        loadFavoriteTracks();
+      });
+    </script>
+  </body>
+</html>

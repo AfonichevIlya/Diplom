@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Friend Requests</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/bootstrap.css" />
+    <link rel="stylesheet" href="style.css" />
+    <header><%- include ('./partials/header') %></header>
+  </head>
+  <body>
+    <h1>Friend Requests</h1>
+    <% if (friendRequests.length > 0) { %>
+    <ul>
+      <% friendRequests.forEach(requestObj => { %>
+      <li>
+        <% const request = requestObj.request; %> <% const sender =
+        requestObj.sender; %> <% if (sender && sender.avatar) { %>
+        <!-- Check if sender and sender's avatar exist -->
+        <img
+          src="/avatars/<%= sender.avatar %>"
+          alt="Avatar"
+          style="width: 50px; height: 50px"
+        />
+        <% } %> <%= sender ? sender.name : request.sender %> хочет добавить вас
+        в друзья. <% if (request.status === 'rejected') { %>
+        <p>Заявка в друзья была отклонена</p>
+        <% } else if (request.status === 'accepted') { %>
+        <p>Заявка в друзья была одобрена</p>
+        <% } else { %>
+        <form action="/accept-friend" method="POST">
+          <input type="hidden" name="requestId" value="<%= request.id %>" />
+          <button type="submit">Принять</button>
+        </form>
+        <form action="/reject-friend" method="POST">
+          <input type="hidden" name="requestId" value="<%= request.id %>" />
+          <button type="submit">Отклонить</button>
+        </form>
+        <% } %>
+      </li>
+      <% }); %>
+    </ul>
+    <% } else { %>
+    <p>В данный момент нет запросов в друзья.</p>
+    <% } %>
+  </body>
+</html>

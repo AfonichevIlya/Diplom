@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+/>
+<link rel="stylesheet" href="/css/bootstrap.css" />
+<link rel="stylesheet" href="style.css" />
+<html>
+  <head>
+    <header><%- include ('./partials/header') %></header>
+
+    <title><%= title %></title>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <div class="container3">
+
+
+<div class="block">
+<div class="block1">
+
+    <img src="/avatars/<%= user.avatar %>" onerror="this.onerror=null;this.src='img/ava.jpg';" alt="Аватар" style="width: 200px; height: 200px; border-radius: 50%; margin-bottom: 20px;"/>
+    <form id="avatarForm" action="/profile/avatar" method="post" enctype="multipart/form-data">
+        <input id="avatarInput" type="file" name="avatar" onchange="submitForm()" />
+        <button id="sub" type="button" onclick="triggerFileInput()">Сменить аватар</button>
+    </form>
+</div>
+    <hr>
+    <h3> <%= user.name %></h3>
+    <p> <%= user.email %></p>
+</div>
+<style>
+    /* Скрываем исходный input */
+    #avatarInput {
+        display: none;
+    }
+</style>
+<script>
+    function triggerFileInput() {
+        // Триггерим клик на реальный input
+        document.getElementById('avatarInput').click();
+    }
+
+    function submitForm() {
+        var input = document.getElementById('avatarInput');
+        if(input.files.length > 0) {
+            // Файл выбран, отправляем форму
+            document.getElementById('avatarForm').submit();
+        }
+    }
+</script>
+  </body>
+</div>
+  <footer><%- include ('./partials/footer') %></footer>
+</html>

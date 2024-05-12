@@ -1,0 +1,100 @@
+<!-- message_LS.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Личный чат</title>
+    <style>
+      /* Стили для сообщений */
+      .message {
+        margin-bottom: 10px;
+        padding: 5px 10px;
+        border-radius: 10px;
+      }
+      .sender {
+        background-color: #f0f0f0;
+        text-align: left;
+      }
+      .recipient {
+        background-color: #e0e0e0;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Личный чат</h1>
+
+    <div id="messageContainer">
+      <% messages.forEach(message => { %>
+      <div
+        class="message <%= message.sender === currentUser ? 'sender' : 'recipient' %>"
+      >
+        <%= message.text %>
+      </div>
+      <% }); %>
+    </div>
+
+    <form id="messageForm">
+      <textarea id="messageInput" rows="3" cols="50"></textarea><br />
+      <button type="submit">Отправить</button>
+    </form>
+
+    <script>
+      const currentUser = "<%= currentUser %>"; // Передаем имя текущего пользователя из сервера
+
+      const messageForm = document.getElementById("messageForm");
+      const messageInput = document.getElementById("messageInput");
+      const messageContainer = document.getElementById("messageContainer");
+
+      // Функция для добавления нового сообщения на страницу
+      function addMessage(message) {
+        const div = document.createElement("div");
+        div.classList.add("message");
+        div.classList.add(
+          message.sender === currentUser ? "sender" : "recipient"
+        );
+        div.textContent = message.text;
+        messageContainer.appendChild(div);
+      }
+
+      // Обработчик отправки сообщения
+      messageForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const text = messageInput.value.trim();
+        if (text === "") return;
+        fetch("/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ recipient: "<%= recipient %>", text }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            addMessage({ text, sender: currentUser });
+            messageInput.value = "";
+          })
+          .catch((error) =>
+            console.error("Ошибка при отправке сообщения:", error)
+          );
+      });
+
+      // Функция для загрузки и отображения сообщений при загрузке страницы
+      function loadMessages() {
+        fetch("/messages")
+          .then((response) => response.json())
+          .then((messages) => {
+            messages.forEach((message) => addMessage(message));
+          })
+          .catch((error) =>
+            console.error("Ошибка при загрузке сообщений:", error)
+          );
+      }
+
+      // Загрузка сообщений при загрузке страницы
+      loadMessages();
+    </script>
+  </body>
+</html>
