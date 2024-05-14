@@ -6,22 +6,121 @@
 header {
   top: 0;
   vertical-align: middle;
+  background-color: rgb(19, 19, 19);
+}
+
+.nav-link {
+  color: white !important;
 }
 
 nav.bg-body-tertiary {
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: auto !important;
+  margin-right: auto !important;
   background-color: transparent !important;
-  width: 75%;
-  top: 10px;
+  width: 61%;
+}
+
+.file-input-container {
+  position: relative;
+  width: 30px; /* Set the desired width of your icon */
+  height: 30px; /* Set the desired height of your icon */
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 10px;
+  margin-left: 3%;
+  /* Adjust margin as needed */
+}
+
+.file-input-container img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.file-input-container input[type=file] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.note-container {
+  background-color: rgb(79, 79, 79);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+textarea.form-control {
+  background-color: rgb(150, 150, 150) !important;
+  border: none !important;
+}
+
+.form-control {
+  border: none !important;
+  background-color: rgb(150, 150, 150) !important;
+}
+
+.note-content {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.button-custom {
+  background-color: #1b3428;
+  color: bisque;
+  border: 1px solid bisque;
+  border-radius: 20px;
+  padding: 10px 20px;
+  box-shadow: 3px 4px 0px 1.2px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.4s, background-color 0.4s, box-shadow 0.4s;
+}
+
+.button-custom:hover {
+  background-color: #213d22;
+  transform: scale(1.12);
+  box-shadow: none;
+}
+
+.button-custom:active {
+  transform: scale(0.98);
+  box-shadow: 0px 3px 3px 1.2px rgba(0, 0, 0, 0.2) inset;
+  transition: transform 0.08s;
+}
+
+.note-image {
+  max-width: 100%;
+  max-height: 200px;
+  display: none; /* Hide initially */
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+.container33 {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(34, 34, 34);
+  margin-top: -30px;
+  margin-left: 3%;
+  border-radius: 10px;
+  width: 15%;
+  height: -moz-max-content;
+  height: max-content;
+  padding: 1% 2% 1% 2%;
+  line-height: 300%;
 }
 
 #menu {
   display: flex;
-  color: #ffcaa2;
+  color: #b2d8b2;
   flex-direction: row;
   align-items: center;
   vertical-align: middle;
+  justify-content: space-between;
 }
 
 #a11 {
@@ -29,8 +128,8 @@ nav.bg-body-tertiary {
   margin-left: 10px;
   padding: 10px 25px 10px 25px;
   text-align: center;
-  background-color: #3c547b !important;
-  color: #ffcaa2;
+  background-color: #1a3628 !important;
+  color: #b2d8b2;
   text-decoration: none;
 }
 
@@ -39,52 +138,47 @@ nav.bg-body-tertiary {
   margin-left: 10px;
   padding: 10px 25px 10px 25px;
   text-align: center;
-  background-color: #3c547b !important;
-  color: #ffcaa2;
+  background-color: #2e473b !important;
+  color: #b2d8b2;
   text-decoration: none;
 }
 
 .klass {
-  background-color: aqua;
-  border: 1px solid black;
+  background-color: #3a5c3a;
+  border: 1px solid #263326;
 }
 
 nav.bg-light {
   background-color: transparent !important;
 }
 
-.nav-link {
-  color: #e1b382;
-}
-
 .navbar-nav .nav-link.active,
 .navbar-nav .nav-link.show {
-  color: #ffcaa2;
+  color: #b2d8b2;
 }
 
 .navbar-brand {
   font-family: "Rubik One", sans-serif;
   font-size: 20px;
   text-transform: uppercase;
-  background: linear-gradient(45deg, #5eacff 33%, #0066ff 56%, #e1b382 80%);
+  background: linear-gradient(45deg, #4caf50 33%, #388e3c 56%, #81c784 80%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: #e1b382;
   display: table;
   opacity: 0; /* начальное значение непрозрачности */
   animation: fadeIn ease-in 1; /* добавляем анимацию fadeIn */
   animation-fill-mode: forwards; /* будет видимым после завершения анимации */
   animation-duration: 0.5s;
+  margin-left: 7%;
 }
 
 .navbar-brand:hover {
   font-family: "Rubik One", sans-serif;
   font-size: 20px;
   text-transform: uppercase;
-  background: linear-gradient(45deg, #e1b382 33%, #0066ff 56%, #5eacff 80%);
+  background: linear-gradient(45deg, #81c784 33%, #388e3c 56%, #4caf50 80%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: #e1b382;
   display: table;
   opacity: 0; /* начальное значение непрозрачности */
   animation: fadeIn ease-in 1; /* добавляем анимацию fadeIn */
@@ -98,11 +192,7 @@ img {
 }
 
 body {
-  background-image: url(./img/1675419004_gas-kvas-com-p-fonovie-risunki-4k-19.jpg);
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-attachment: fixed;
-  background-size: cover;
+  background-color: #161616 !important;
 }
 
 footer {
@@ -116,39 +206,41 @@ footer.border-top {
 }
 
 .text-muted {
-  color: #e1b382 !important;
+  color: #b2d8b2 !important;
 }
 
 .nav-link.px-2 {
-  color: #e1b382;
+  color: #b2d8b2;
 }
 
 .nav-link:hover {
-  color: rgb(255, 182, 93);
+  color: #99cc99;
 }
 
 .container {
-  max-width: 70%;
-  background-color: rgba(4, 17, 21, 0.7607843137);
+  width: 60% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  background-color: rgba(53, 53, 53, 0.7607843137);
   padding-top: 50px;
   padding-bottom: 120px;
-  color: #e1b382;
+  color: #b2d8b2;
 }
 
 .container3 {
   margin-left: auto;
   margin-right: auto;
   max-width: 70%;
-  background-color: rgba(4, 17, 21, 0.7607843137);
+  background-color: rgba(13, 38, 16, 0.7607843137);
   padding-top: 50px;
   padding-bottom: 120px;
-  color: #e1b382;
+  color: #b2d8b2;
   text-align: center;
 }
 
 .container2 {
   min-width: 58%;
-  background-color: rgba(4, 17, 21, 0.6509803922);
+  background-color: rgba(13, 38, 16, 0.6509803922);
   padding-top: 120px;
   padding-bottom: 120px;
 }
@@ -167,10 +259,9 @@ h1 {
   font-family: "Rubik One", sans-serif;
   font-size: 150px;
   text-transform: uppercase;
-  background: linear-gradient(45deg, #b74553 7%, #062649 20%, #113964 60%, #2c62b3 85%);
+  background: linear-gradient(45deg, #275c34 7%, #062649 20%, #113964 60%, #2c62b3 85%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: #e1b382;
   display: table;
   margin: 20px auto;
   opacity: 0; /* начальное значение непрозрачности */
@@ -185,11 +276,9 @@ h1 {
   font-size: 30px;
   max-width: 940px;
   text-transform: uppercase;
-  background: linear-gradient(45deg, #b74553 20%, #16385c 37%, #16385c 70%, #2c62b3 85%);
+  background: linear-gradient(45deg, #275c34 20%, #16385c 37%, #16385c 70%, #2c62b3 85%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: #e1b382;
-  color: #00022e;
   position: absolute;
   left: 25%;
   top: 300px;
@@ -197,7 +286,6 @@ h1 {
   margin: 0 auto; /* Centers the h4 element */
   letter-spacing: 0.15em; /* Adjust as needed */
   white-space: pre-wrap; /* Allows text wrapping and preserves whitespace */
-  /* Remove the border-right style used for the cursor */
 }
 
 #typewriter2 h5 {
@@ -209,7 +297,7 @@ h1 {
   max-width: 940px;
   background-color: rgba(0, 0, 0, 0.6823529412);
   text-transform: uppercase;
-  color: #e65e5e;
+  color: #6ca36c;
   padding: 5px;
   margin-top: 300px;
 }
@@ -218,7 +306,7 @@ h1 {
 .cursor {
   display: inline;
   font-weight: bold;
-  color: orange;
+  color: #99cc99;
   animation: blink-caret 0.5s step-end infinite;
 }
 
@@ -239,7 +327,7 @@ h1 {
   margin-left: auto;
   margin-right: auto;
   max-width: 900px;
-  color: #e1b382;
+  color: #b2d8b2;
 }
 
 .profile-img {
@@ -248,19 +336,15 @@ h1 {
   height: 40px;
 }
 
-.profile-button {
-  /* Ваши стили для кнопки "Профиль" */
-}
-
 .card-body {
-  background-color: #181818;
-  color: #e1b382;
+  background-color: rgb(34, 34, 34);
+  color: bisque !important;
   border-radius: 5px;
-  border-color: #e1b382;
+  border-color: transparent !important;
 }
 
 #a2 {
-  background-color: rgb(60, 17, 17);
+  background-color: #1b3428;
   color: bisque;
   -webkit-animation: ease-in-out;
   border: 1px solid bisque;
@@ -273,7 +357,7 @@ h1 {
 }
 
 #a2:hover {
-  background-color: rgb(255, 0, 0);
+  background-color: #213d22;
   color: bisque;
   transform: scale(1.12);
   border: 1px solid bisque;
@@ -287,7 +371,7 @@ h1 {
 }
 
 #a3 {
-  background-color: rgb(17, 21, 60);
+  background-color: #172d3b;
   color: bisque;
   -webkit-animation: ease-in-out;
   border: 1px solid bisque;
@@ -301,7 +385,7 @@ h1 {
 }
 
 #a3:hover {
-  background-color: rgb(60, 0, 255);
+  background-color: #2e7d32;
   color: bisque;
   transform: scale(1.12);
   border: 1px solid bisque;
@@ -315,7 +399,7 @@ h1 {
 }
 
 #a4 {
-  background-color: rgb(17, 44, 60);
+  background-color: #172d3b;
   color: bisque;
   -webkit-animation: ease-in-out;
   border: 1px solid bisque;
@@ -329,8 +413,8 @@ h1 {
 }
 
 #a4:hover {
-  background-color: rgb(0, 255, 187);
-  color: rgb(97, 86, 73);
+  background-color: #388e3c;
+  color: bisque;
   transform: scale(1.12);
   border: 1px solid bisque;
   box-shadow: none;
@@ -343,7 +427,7 @@ h1 {
 }
 
 #sub {
-  background-color: rgb(21, 60, 17);
+  background-color: #172d3b;
   color: bisque;
   -webkit-animation: ease-in-out;
   border: 1px solid bisque;
@@ -357,7 +441,7 @@ h1 {
 }
 
 #sub:hover {
-  background-color: rgb(0, 255, 55);
+  background-color: #2e7d32;
   color: bisque;
   transform: scale(1.12);
   border: 1px solid bisque;
@@ -385,7 +469,7 @@ h1 {
 
 .block {
   margin-top: 30px;
-  background-color: #000808;
+  background-color: #0a3a1b;
   padding: 20px;
   border-radius: 20px;
   width: 30%;
@@ -401,4 +485,25 @@ h1 {
   width: max-content;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* Remove bullet points from list items */
+ul.navbar-nav {
+  list-style-type: none; /* Remove bullets */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+}
+
+/* Additional styling for nav items */
+.nav-item {
+  display: inline-block; /* Align items horizontally */
+}
+
+.nav-link {
+  text-decoration: none; /* Remove underline from links */
+  color: #b2d8b2; /* Set your desired link color */
+}
+
+.nav-link:hover {
+  color: #99cc99; /* Set your desired hover color */
 }/*# sourceMappingURL=style.css.map */
