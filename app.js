@@ -100,13 +100,9 @@ io.on("connection", (socket) => {
     io.emit("chat message", message);
   });
   // Здесь вы можете добавить логику для обработки чата между пользователями
-
-  // Обработчик получения имени пользователя
-  socket.on("set username", (username) => {
-    socket.username = username;
-  });
 });
 
 server.listen(port, () => {
   console.log("Сервер запущен на http://localhost:80");
 });
+/////////////

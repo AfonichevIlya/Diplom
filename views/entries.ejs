@@ -135,7 +135,6 @@
             })
             
             </script>
-            <footer> <%- include ('./partials/footer') %></footer>
           <% } else { %>
             <div id="typewriter2"><h5> Пожалуйста, войдите или зарегистрируйтесь, чтобы увидеть контент</h5></div>
             <script>
@@ -152,24 +151,25 @@
                 
                 function type() {
                   if (index < text.length) {
-      // Remove cursor before adding new character
-      typewriterText.removeChild(cursor);
-      // Add next character
-      typewriterText.textContent += text[index];
-      // Re-append cursor after new character
-      typewriterText.appendChild(cursor);
-      index++;
-      // Randomize the typing speed between 50ms and 150ms.
-      setTimeout(type, Math.random() * (40 - 10) + 30);
-    }
-  }
-  
+                    // Remove cursor before adding new character
+                    typewriterText.removeChild(cursor);
+                    // Add next character
+                    typewriterText.textContent += text[index];
+                    // Re-append cursor after new character
+                    typewriterText.appendChild(cursor);
+                    index++;
+                    // Randomize the typing speed between 50ms and 150ms.
+                    setTimeout(type, Math.random() * (40 - 10) + 30);
+                  }
+                }
+                
   // Start typing
   type();
 });
 
 </script>
 
+<footer> <%- include ('./partials/footer') %></footer>
 <% } %>
 </body>
 </html>

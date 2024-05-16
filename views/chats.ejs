@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chats</title>
+  </head>
+  <body>
+    <h2>Your Chats</h2>
+    <ul>
+      <% chats.forEach(chat => { %>
+      <li>
+        <a href="/chats/<%= chat.id %>"
+          >Chat between <%= chat.user1_name %> and <%= chat.user2_name %></a
+        >
+      </li>
+      <% }) %>
+    </ul>
+  </body>
+</html>

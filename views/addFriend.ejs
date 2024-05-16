@@ -1,4 +1,3 @@
-<!-- addFriend.ejs -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,14 +10,23 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
-    <header><%- include ('./partials/header') %></header>
   </head>
   <body>
-    <h1>Добавить друга</h1>
-    <form action="/add-friend" method="POST">
-      <label for="friendName">Имя пользователя:</label>
-      <input type="text" id="friendName" name="friendName" />
-      <button type="submit">Отправить</button>
-    </form>
+    <header><%- include('./partials/header') %></header>
+
+    <h2>Все пользователи соцсети</h2>
+    <ul>
+      <% users.forEach(user => { %>
+      <li>
+        <%= user.name %> <% if (locals.user.name !== user.name) { %>
+        <!-- Не показывать кнопку для самого себя -->
+        <form action="/chats" method="post" style="display: inline">
+          <input type="hidden" name="user2_id" value="<%= user.id %>" />
+          <button type="submit">Написать сообщение</button>
+        </form>
+        <% } %>
+      </li>
+      <% }) %>
+    </ul>
   </body>
 </html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Messages</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"
+      integrity="sha512-g1In0WpMkCTy26Kn6j/UmMw9YiZ5IQ8rUMJnY5uWv9Ld6B0P5d1AosQX+xd7hEFkF7o06IXahKk7leJ61LnTKw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      const socket = io();
+
+      // Подписываемся на событие обновления чата
+      socket.on("message chat", (chatId) => {
+        // При получении события обновления чата, перезагружаем страницу
+        window.location.reload();
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Messages</h1>
+    <ul>
+      <% messages.forEach(message => { %>
+      <li>
+        <strong><%= message.sender_username %>:</strong> <%= message.content %>
+        <em><%= message.timestamp %></em>
+      </li>
+      <% }) %>
+    </ul>
+
+    <form action="/messages" method="post">
+      <input type="hidden" name="chat_id" value="<%= chatId %>" />
+      <input type="hidden" name="sender_id" value="1" />
+      <!-- Идентификатор текущего пользователя -->
+      <textarea name="content" placeholder="Message" required></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </body>
+  <script>
+    // Listen for incoming chat messages
+    socket.on("message chat", (message) => {
+      // Update the chat interface with the new message
+      const chatMessages = document.getElementById("chat-messages");
+      const newMessage = document.createElement("li");
+      newMessage.innerHTML = `<strong>${message.sender_username}:</strong> ${message.content} <em>${message.timestamp}</em>`;
+      chatMessages.appendChild(newMessage);
+    });
+  </script>
+</html>

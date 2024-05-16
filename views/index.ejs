@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <title>Chat</title>
+    <script>
+      const socket = io();
+
+      const sendPrivateMessage = () => {
+        const messageInput = document.getElementById("messageInput");
+        const recipientInput = document.getElementById("recipientInput");
+        const message = messageInput.value;
+        const recipient = recipientInput.value;
+
+        socket.emit("private message", {
+          sender: "<%= username %>", // Assume username is available
+          receiver: recipient,
+          message: message,
+        });
+
+        messageInput.value = "";
+      };
+
+      socket.on("private message", (msg) => {
+        const messagesList = document.getElementById("messagesList");
+        const li = document.createElement("li");
+        li.textContent = `${msg.sender} (${formatTime(msg.time)}): ${
+          msg.message
+        }`;
+        messagesList.appendChild(li);
+      });
+
+      function formatTime(timeString) {
+        return moment(timeString).format("HH:mm:ss");
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Chat</h1>
+    <ul id="messagesList"></ul>
+    <input type="text" id="recipientInput" placeholder="Recipient Username" />
+    <input type="text" id="messageInput" placeholder="Your Message" />
+    <button onclick="sendPrivateMessage()">Send Private Message</button>
+  </body>
+</html>

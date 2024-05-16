@@ -14,12 +14,12 @@ const ensureAuthenticated = require("../middleware/auth");
 const bodyParser = require("body-parser");
 const axios = require("axios");
 const sqlite3 = require("sqlite3").verbose();
-const {
-  sendFriendRequest,
-  acceptFriendRequest,
-  rejectFriendRequest,
-} = require("../controllers/friendController");
-const FriendRequest = require("../models/friendRequest");
+const http = require("http");
+const socketIo = require("socket.io");
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
 const db = new sqlite3.Database("test.sqlite");
 
@@ -174,104 +174,6 @@ router.get("/music", function (req, res) {
   res.render("music");
 });
 /////////////////////
-const getAcceptedFriends = (userId, callback) => {
-  db.all(
-    `SELECT * FROM friend_requests WHERE (sender = ? OR recipient = ?) AND status = 'accepted'`,
-    [userId, userId],
-    (err, friendRequests) => {
-      if (err) {
-        console.error("Ошибка при получении списка друзей:", err);
-        callback(err, null);
-      } else {
-        // Extract IDs of friends
-        const friendIds = friendRequests.map((request) =>
-          request.sender === userId ? request.recipient : request.sender
-        );
-
-        // Retrieve information about friends from the User model
-        User.findManyById(friendIds, (err, friends) => {
-          if (err) {
-            console.error("Ошибка при получении информации о друзьях:", err);
-            callback(err, null);
-          } else {
-            callback(null, friends);
-          }
-        });
-      }
-    }
-  );
-};
-const getPendingFriends = (userId, callback) => {
-  db.all(
-    `SELECT * FROM friend_requests WHERE (sender = ? OR recipient = ?) AND status = 'pending'`,
-    [userId, userId],
-    (err, friendRequests) => {
-      if (err) {
-        console.error("Ошибка при получении списка друзей:", err);
-        callback(err, null);
-      } else {
-        // Создаем массив для хранения ID друзей
-        const friendIds = [];
-
-        // Проходим по каждому запросу в друзья
-        friendRequests.forEach((request) => {
-          // Определяем ID друга на основе отправителя и получателя
-          const friendId =
-            request.sender === userId ? request.recipient : request.sender;
-          // Добавляем ID друга в массив, если его еще нет там
-          if (!friendIds.includes(friendId)) {
-            friendIds.push(friendId);
-          }
-        });
-
-        // Получаем информацию о друзьях из таблицы пользователей
-        User.findManyById(friendIds, (err, friends) => {
-          if (err) {
-            console.error("Ошибка при получении информации о друзьях:", err);
-            callback(err, null);
-          } else {
-            callback(null, friends);
-          }
-        });
-      }
-    }
-  );
-};
-
-////////////////////
-const getFriends = (userId, callback) => {
-  db.all(
-    `SELECT * FROM friend_requests WHERE (sender = ? OR recipient = ?) AND status = 'accepted'`,
-    [userId, userId],
-    (err, friendRequests) => {
-      if (err) {
-        console.error("Error getting friends:", err);
-        callback(err, null);
-      } else {
-        // Extract usernames of friends
-        const friends = friendRequests.map((request) =>
-          request.sender === userId ? request.recipient : request.sender
-        );
-        callback(null, friends);
-      }
-    }
-  );
-};
-
-// Assuming you have a route to render the addFriend.ejs template
-router.get("/friends", (req, res) => {
-  // Get the list of friends for the current user
-  const userId = req.user.id; // Assuming you have a way to retrieve the user ID
-  getFriends(userId, (err, friends) => {
-    if (err) {
-      console.error("Error getting friends:", err);
-      // Handle the error
-    } else {
-      // Render the addFriend.ejs template with the list of friends
-      res.render("addFriend", { friends });
-    }
-  });
-});
 
 router.get("/messages", ensureAuthenticated, function (req, res) {
   console.log("req.user:", req.user); // Вывод отладочной информации
@@ -355,152 +257,139 @@ router.delete("/favorites/:name", (req, res) => {
 });
 //////////
 
-// Маршрут для обработки отправки запроса на добавление в друзья
-router.post("/add-friend", (req, res) => {
-  const senderName = req.user && req.user.name;
-  const recipientName = req.body.friendName; // Получаем имя получателя из запроса
-  const senderAvatar = req.user && req.user.avatar;
+db.serialize(() => {
+  // Таблица чатов
+  db.run(`CREATE TABLE IF NOT EXISTS chats  (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user1_id INTEGER,
+      user2_id INTEGER,
+      FOREIGN KEY(user1_id) REFERENCES users(id),
+      FOREIGN KEY(user2_id) REFERENCES users(id)
+  )`);
 
-  // Проверка, что recipientName не пустое значение
-  if (!recipientName) {
-    return res
-      .status(400)
-      .json({ error: "Не указан получатель запроса в друзья" });
-  }
-
-  // Вставляем новый запрос в таблицу friend_requests
-  db.run(
-    `INSERT INTO friend_requests (sender, sender_avatar, recipient) VALUES (?, ?, ?)`,
-    [senderName, senderAvatar, recipientName],
-    function (err) {
-      if (err) {
-        console.error("Ошибка при отправке запроса в друзья:", err);
-        return res
-          .status(500)
-          .json({ error: "Ошибка при отправке запроса в друзья" });
-      } else {
-        // После успешной отправки запроса, обновляем список друзей
-        updateFriendList(req, res, senderName);
-      }
-    }
-  );
+  // Таблица сообщений
+  db.run(`CREATE TABLE IF NOT EXISTS messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      chat_id INTEGER,
+      sender_id INTEGER,
+      content TEXT,
+      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(chat_id) REFERENCES chats(id),
+      FOREIGN KEY(sender_id) REFERENCES users(id)
+  )`);
 });
-function updateFriendList(req, res, userName) {
-  // Извлекаем список друзей из базы данных
+
+router.get("/chats", (req, res) => {
   db.all(
-    `SELECT * FROM friend_requests WHERE sender = ? OR recipient = ?`,
-    [userName, userName],
-    (err, friends) => {
+    `SELECT chats.*, u1.name as user1_name, u2.name as user2_name
+          FROM chats
+          JOIN users u1 ON chats.user1_id = u1.id
+          JOIN users u2 ON chats.user2_id = u2.id`,
+    [],
+    (err, chats) => {
       if (err) {
-        console.error("Ошибка при получении списка друзей:", err);
-        // Возможно, здесь нужно обработать ошибку
-      } else {
-        res.render("addFriend", { friends: friends }); // Передаем список друзей в шаблон
+        console.error("Ошибка получения чатов:", err);
+        return res.status(500).send("Ошибка получения чатов.");
       }
-    }
-  );
-}
-// Маршрут для отображения страницы запросов в друзья
-router.get("/friend-requests", (req, res) => {
-  // Извлекаем список запросов в друзья из базы данных
-  db.all(`SELECT * FROM friend_requests`, (err, friendRequests) => {
-    if (err) {
-      console.error("Ошибка при получении запросов в друзья:", err);
-      res.status(500).json({ error: "Ошибка при получении запросов в друзья" });
-    } else {
-      // Для каждого запроса в друзья получаем информацию о пользователе-отправителе
-      const requestsWithSenders = [];
-      friendRequests.forEach((request) => {
-        User.findByEmail(request.sender, (err, sender) => {
-          if (err) {
-            console.error(
-              "Ошибка при получении информации об отправителе:",
-              err
-            );
-          } else {
-            requestsWithSenders.push({ request, sender });
-            // Если информация о всех отправителях получена, рендерим страницу
-            if (requestsWithSenders.length === friendRequests.length) {
-              res.render("friendRequests", {
-                friendRequests: requestsWithSenders,
-              });
-            }
-          }
-        });
+      db.all(`SELECT * FROM users`, [], (err, users) => {
+        if (err) {
+          console.error("Ошибка получения списка пользователей:", err);
+          return res.status(500).send("Ошибка получения списка пользователей.");
+        }
+        res.render("chats", { users, chats });
       });
     }
-  });
+  );
 });
-router.post("/friend-requests", (req, res) => {
-  const userId = req.user.id;
-
-  FriendRequest.getFriendRequestsForUser(userId, (err, friendRequests) => {
+router.get("/add-friend", (req, res) => {
+  db.all(`SELECT * FROM users`, [], (err, users) => {
     if (err) {
-      console.error("Error getting friend requests:", err);
-      return res.status(500).json({ error: "Error getting friend requests" });
+      console.error("Ошибка получения списка пользователей:", err);
+      return res.status(500).send("Ошибка получения списка пользователей.");
     }
-    res.render("friendRequests", { friendRequests, user: req.user });
+    res.render("addFriend", { users });
   });
 });
-// Маршрут для принятия запроса в друзья
-router.post("/accept-friend", (req, res) => {
-  const { requestId } = req.body;
+router.post("/chats", (req, res) => {
+  const { user2_id } = req.body;
+  const user1_id = req.user.id; // Текущий пользователь из сессии
 
-  FriendRequest.updateFriendRequestStatus(
-    requestId,
-    "accepted",
-    (err, changes) => {
+  // Проверка наличия существующего чата между пользователями
+  db.get(
+    `SELECT id FROM chats WHERE (user1_id = ? AND user2_id = ?) OR (user1_id = ? AND user2_id = ?)`,
+    [user1_id, user2_id, user2_id, user1_id],
+    (err, chat) => {
       if (err) {
-        console.error("Error accepting friend request:", err);
-        return res
-          .status(500)
-          .json({ error: "Error accepting friend request" });
+        console.error("Ошибка проверки существующего чата:", err);
+        return res.status(500).send("Ошибка проверки существующего чата.");
       }
-      res.redirect("/friend-requests");
+      if (chat) {
+        // Чат уже существует, перенаправляем пользователя
+        return res.redirect(`/chats/${chat.id}`);
+      } else {
+        // Чат не существует, создаем новый чат
+        db.run(
+          `INSERT INTO chats (user1_id, user2_id) VALUES (?, ?)`,
+          [user1_id, user2_id],
+          function (err) {
+            if (err) {
+              console.error("Ошибка создания чата:", err);
+              return res.status(500).send("Ошибка создания чата.");
+            }
+            res.redirect(`/chats/${this.lastID}`);
+          }
+        );
+      }
     }
   );
 });
 
-// Маршрут для отклонения запроса в друзья
-router.post("/reject-friend", (req, res) => {
-  const { requestId } = req.body;
-
-  FriendRequest.updateFriendRequestStatus(
-    requestId,
-    "rejected",
-    (err, changes) => {
+router.get("/chats/:id", (req, res) => {
+  const chatId = req.params.id;
+  db.all(
+    `SELECT messages.*, users.name AS sender_username 
+        FROM messages 
+        JOIN users ON messages.sender_id = users.id 
+        WHERE chat_id = ?`,
+    [chatId],
+    (err, messages) => {
       if (err) {
-        console.error("Error rejecting friend request:", err);
-        return res
-          .status(500)
-          .json({ error: "Error rejecting friend request" });
+        console.error("Ошибка получения сообщений:", err);
+        return res.status(500).send("Ошибка получения сообщений.");
       }
-      // Redirect back to the friend requests page
-      res.redirect("/friend-requests");
+      res.render("messages", { chatId, messages });
     }
   );
 });
-router.get("/my-friends", (req, res) => {
-  const userId = req.user.id; // Предполагается, что у тебя есть объект пользователя в запросе
-  getAcceptedFriends(userId, (err, friends) => {
-    if (err) {
-      console.error("Ошибка при получении списка друзей:", err);
-      // Обработка ошибки
-      res.status(500).send("Ошибка при получении списка друзей");
-    } else {
-      console.log("Список друзей:", friends); // Логирование списка друзей
-      res.render("myFriends", { friends: friends }); // Передача списка друзей в шаблон
-    }
-  });
+io.on("connection", (socket) => {
+  console.log("Новое подключение:", socket.id);
 
-  FriendRequest.getAcceptedFriendRequestsForUser(userId, (err, friends) => {
-    if (err) {
-      console.error("Error getting friends:", err);
-      res.status(500).send("Internal Server Error");
-    } else {
-      // Рендерим шаблон и передаем данные о друзьях в него
-      res.render("my-friends", { friends });
-    }
+  // Пример обработчика сообщений от клиента
+  socket.on("message chat", (data) => {
+    const newMessage = {
+      sender_username: data.username, // Use data.username instead of req.user.name
+      content: data.content, // Use data.content instead of content
+      timestamp: new Date().toISOString(),
+    };
+    io.emit("message chat", newMessage); // Emit to all connected clients
   });
 });
+router.post("/messages", (req, res) => {
+  const { chat_id, content } = req.body;
+  const sender_id = req.user.id; // Current user from session
+
+  db.run(
+    `INSERT INTO messages (chat_id, sender_id, content) VALUES (?, ?, ?)`,
+    [chat_id, sender_id, content],
+    function (err) {
+      if (err) {
+        console.error("Error sending message:", err);
+        return res.status(500).send("Error sending message.");
+      }
+
+      res.redirect(`/chats/${chat_id}`);
+    }
+  );
+});
+
 module.exports = router;
