@@ -1,51 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <% if (locals.user) { %> <%- include('./partials/header'); %> <% } %>
     <meta charset="UTF-8" />
-    <title>Messages</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"
-      integrity="sha512-g1In0WpMkCTy26Kn6j/UmMw9YiZ5IQ8rUMJnY5uWv9Ld6B0P5d1AosQX+xd7hEFkF7o06IXahKk7leJ61LnTKw=="
+      src="https://kit.fontawesome.com/5833c2855b.js"
       crossorigin="anonymous"
-      referrerpolicy="no-referrer"
     ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+      crossorigin="anonymous"
+    ></script>
+    <title>Чат</title>
+    <!-- Подключаем Socket.IO -->
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- Подключаем Moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script>
+      // Инициализируем Socket.IO на клиенте
       const socket = io();
 
-      // Подписываемся на событие обновления чата
-      socket.on("message chat", (chatId) => {
-        // При получении события обновления чата, перезагружаем страницу
-        window.location.reload();
+      // Обработчик отправки сообщения
+      const sendMessage = () => {
+        const messageInput = document.getElementById("messageInput");
+        const message = messageInput.value;
+
+        // Отправляем сообщение с именем пользователя на сервер
+        socket.emit("message chat", {
+          message: message,
+          username: "<%= user.name %>",
+          senderId: "<%= user.id %>",
+          chatId: "<%= chatId %>",
+        });
+
+        messageInput.value = "";
+      };
+
+      socket.on("message chat", (msg) => {
+        const messagesList = document.getElementById("messagesList");
+        const li = document.createElement("li");
+        // Формируем текст сообщения с именем пользователя и временем
+        li.textContent = `${msg.username} (${formatTime(msg.time)}): ${
+          msg.text
+        }`;
+        messagesList.appendChild(li);
       });
+
+      // Функция для форматирования времени с помощью Moment.js
+      function formatTime(timeString) {
+        return moment(timeString).format("HH:mm:ss"); // Формат времени по вашему желанию
+      }
     </script>
   </head>
   <body>
-    <h1>Messages</h1>
-    <ul>
-      <% messages.forEach(message => { %>
-      <li>
-        <strong><%= message.sender_username %>:</strong> <%= message.content %>
-        <em><%= message.timestamp %></em>
-      </li>
-      <% }) %>
-    </ul>
-
-    <form action="/messages" method="post">
-      <input type="hidden" name="chat_id" value="<%= chatId %>" />
-      <input type="hidden" name="sender_id" value="1" />
-      <!-- Идентификатор текущего пользователя -->
-      <textarea name="content" placeholder="Message" required></textarea>
-      <button type="submit">Send</button>
-    </form>
+    <h1>Чат</h1>
+    <ul id="messagesList"></ul>
+    <input type="text" id="messageInput" />
+    <button onclick="sendMessage()">Отправить</button>
+    <script>
+      // Функция для загрузки сообщений чата при загрузке страницы
+      window.onload = function () {
+        fetch(`/chats/<%= chatId %>/messages`)
+          .then((response) => response.json())
+          .then((messages) => {
+            const messagesList = document.getElementById("messagesList");
+            messages.forEach((msg) => {
+              const li = document.createElement("li");
+              li.textContent = `${msg.sender_username} (${formatTime(
+                msg.time
+              )}): ${msg.text}`;
+              messagesList.appendChild(li);
+            });
+          })
+          .catch((error) => console.error("Ошибка загрузки сообщений:", error));
+      };
+    </script>
   </body>
-  <script>
-    // Listen for incoming chat messages
-    socket.on("message chat", (message) => {
-      // Update the chat interface with the new message
-      const chatMessages = document.getElementById("chat-messages");
-      const newMessage = document.createElement("li");
-      newMessage.innerHTML = `<strong>${message.sender_username}:</strong> ${message.content} <em>${message.timestamp}</em>`;
-      chatMessages.appendChild(newMessage);
-    });
-  </script>
 </html>

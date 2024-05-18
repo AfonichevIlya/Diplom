@@ -29,10 +29,9 @@
         <div class="container" style="display: flex; flex-direction: row;">
           <div class="container33">
             <%- include ('./partials/menu') %>
-
           </div>
-          <div class="container22">
-       <div class="container11" style="width: 100%; margin-left: 10%; margin-right:auto ;margin-bottom: 10%; 
+   
+       <div class="container11" style="width: 50%; margin-left: 10%; margin-right:auto ;margin-bottom: 10%; 
        ">
 
          <form action="/post" method="post" enctype="multipart/form-data">
@@ -64,24 +63,22 @@
                 <input type="file" id="image" name="image">
               </div>
             </div>
-            <div class="mb-3">
-            </div>
+          
             <button type="submit" value="Post" class="button-custom">
               Опубликовать
             </button>
           </form>
           
           <% entries.forEach((entry)=>{ %>
-            <div class="card entry" style="width: 100% ; margin-top: 10%; 
-        ">
-            <div class="card-body ">
+           
+            <div class="card-body" style="min-width: 100%;">
               <h5 class="card-title"><%= entry.title %></h5>
               <p class="card-text">
                 <%= entry.content %> 
               </p>
             </br>
             <% if(entry.image){ %>
-              <img src="/images/<%= entry.image %>" alt="Post Image" style="min-width: min-content;">
+              <img src="/images/<%= entry.image %>" alt="Post Image" style="min-width: 100%;">
               <% } %>
             </br>
             <div style="width: max-content;">
@@ -98,16 +95,14 @@
                 Удалить
               </button>
               <% } %>
-              
-              
-            </div>
+               </div>
+               <% }) %> 
           </div> 
         </div>
         </br>
-        <% }) %> 
       </div>
             
-          </div>
+         
           
           <script>
              document.getElementById('image').addEventListener('change', function(event) {

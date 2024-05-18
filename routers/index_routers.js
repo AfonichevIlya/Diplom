@@ -14,14 +14,15 @@ const ensureAuthenticated = require("../middleware/auth");
 const bodyParser = require("body-parser");
 const axios = require("axios");
 const sqlite3 = require("sqlite3").verbose();
+const db = new sqlite3.Database("test.sqlite");
+
 const http = require("http");
 const socketIo = require("socket.io");
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
-
-const db = new sqlite3.Database("test.sqlite");
+app.use(router);
 
 router.get("/", entries.list);
 
@@ -256,35 +257,35 @@ router.delete("/favorites/:name", (req, res) => {
   });
 });
 //////////
-
 db.serialize(() => {
-  // Таблица чатов
-  db.run(`CREATE TABLE IF NOT EXISTS chats  (
+  db.run(`
+    CREATE TABLE IF NOT EXISTS messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL,
+      text TEXT NOT NULL,
+      time DATETIME DEFAULT CURRENT_TIMESTAMP,
+      sender_id INTEGER,
+      chat_id INTEGER
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS chats (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user1_id INTEGER,
       user2_id INTEGER,
       FOREIGN KEY(user1_id) REFERENCES users(id),
       FOREIGN KEY(user2_id) REFERENCES users(id)
-  )`);
-
-  // Таблица сообщений
-  db.run(`CREATE TABLE IF NOT EXISTS messages (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      chat_id INTEGER,
-      sender_id INTEGER,
-      content TEXT,
-      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY(chat_id) REFERENCES chats(id),
-      FOREIGN KEY(sender_id) REFERENCES users(id)
-  )`);
+    )
+  `);
 });
 
 router.get("/chats", (req, res) => {
   db.all(
     `SELECT chats.*, u1.name as user1_name, u2.name as user2_name
-          FROM chats
-          JOIN users u1 ON chats.user1_id = u1.id
-          JOIN users u2 ON chats.user2_id = u2.id`,
+    FROM chats
+    JOIN users u1 ON chats.user1_id = u1.id
+    JOIN users u2 ON chats.user2_id = u2.id`,
     [],
     (err, chats) => {
       if (err) {
@@ -310,11 +311,19 @@ router.get("/add-friend", (req, res) => {
     res.render("addFriend", { users });
   });
 });
-router.post("/chats", (req, res) => {
-  const { user2_id } = req.body;
-  const user1_id = req.user.id; // Текущий пользователь из сессии
+const passChatAndSenderIds = (req, res, next) => {
+  // Добавляем id чата и id отправителя к объекту req
+  req.chatId = req.params.id;
+  req.senderId = req.user.id;
+  next();
+};
 
-  // Проверка наличия существующего чата между пользователями
+router.post("/chats", passChatAndSenderIds, (req, res) => {
+  const { user2_id } = req.body;
+  const user1_id = req.user.id;
+  const chatId = req.chatId; // Используйте переданный id чата
+  const senderId = req.senderId;
+
   db.get(
     `SELECT id FROM chats WHERE (user1_id = ? AND user2_id = ?) OR (user1_id = ? AND user2_id = ?)`,
     [user1_id, user2_id, user2_id, user1_id],
@@ -324,10 +333,8 @@ router.post("/chats", (req, res) => {
         return res.status(500).send("Ошибка проверки существующего чата.");
       }
       if (chat) {
-        // Чат уже существует, перенаправляем пользователя
         return res.redirect(`/chats/${chat.id}`);
       } else {
-        // Чат не существует, создаем новый чат
         db.run(
           `INSERT INTO chats (user1_id, user2_id) VALUES (?, ?)`,
           [user1_id, user2_id],
@@ -344,13 +351,13 @@ router.post("/chats", (req, res) => {
   );
 });
 
-router.get("/chats/:id", (req, res) => {
+router.get("/chats/:id", passChatAndSenderIds, (req, res) => {
   const chatId = req.params.id;
   db.all(
     `SELECT messages.*, users.name AS sender_username 
-        FROM messages 
-        JOIN users ON messages.sender_id = users.id 
-        WHERE chat_id = ?`,
+    FROM messages 
+    JOIN users ON messages.sender_id = users.id 
+    WHERE chat_id = ?`,
     [chatId],
     (err, messages) => {
       if (err) {
@@ -361,35 +368,44 @@ router.get("/chats/:id", (req, res) => {
     }
   );
 });
-io.on("connection", (socket) => {
-  console.log("Новое подключение:", socket.id);
 
-  // Пример обработчика сообщений от клиента
-  socket.on("message chat", (data) => {
-    const newMessage = {
-      sender_username: data.username, // Use data.username instead of req.user.name
-      content: data.content, // Use data.content instead of content
-      timestamp: new Date().toISOString(),
-    };
-    io.emit("message chat", newMessage); // Emit to all connected clients
-  });
-});
-router.post("/messages", (req, res) => {
-  const { chat_id, content } = req.body;
-  const sender_id = req.user.id; // Current user from session
-
-  db.run(
-    `INSERT INTO messages (chat_id, sender_id, content) VALUES (?, ?, ?)`,
-    [chat_id, sender_id, content],
-    function (err) {
-      if (err) {
-        console.error("Error sending message:", err);
-        return res.status(500).send("Error sending message.");
+router.get("/messages", ensureAuthenticated, (req, res) => {
+  console.log("req.user:", req.user);
+  if (!req.user || !req.user.name) {
+    res.status(401).send("Unauthorized");
+  } else {
+    db.all(
+      `SELECT username, text, time FROM messages ORDER BY time ASC`,
+      [],
+      (err, rows) => {
+        if (err) {
+          console.error("Error fetching messages:", err.message); // Log the error
+          res.status(500).send("Internal Server Error");
+        } else {
+          res.render("chat", { username: req.user.name, messages: rows });
+        }
       }
-
-      res.redirect(`/chats/${chat_id}`);
+    );
+  }
+});
+// Инициализация Socket.IO
+router.get("/chats/:id/messages", passChatAndSenderIds, (req, res) => {
+  const chatId = req.params.id;
+  db.all(
+    `SELECT messages.*, users.name AS sender_username 
+    FROM messages 
+    JOIN users ON messages.sender_id = users.id 
+    WHERE chat_id = ?`,
+    [chatId],
+    (err, messages) => {
+      if (err) {
+        console.error("Ошибка получения сообщений:", err);
+        return res.status(500).send("Ошибка получения сообщений.");
+      }
+      res.json(messages); // Отправляем сообщения в формате JSON
     }
   );
 });
+app.use(router);
 
 module.exports = router;

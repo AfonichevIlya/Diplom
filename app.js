@@ -18,11 +18,14 @@ const passportFunctionGoogle = require("./middleware/passport_go");
 const passportFunctionGitHub = require("./middleware/passport_github");
 const passportFunctionVkontakte = require("./middleware/passport_vkontakte");
 const socketIo = require("socket.io");
-
+const moment = require("moment");
+const sqlite3 = require("sqlite3").verbose();
+const db = new sqlite3.Database("test.sqlite");
 const http = require("http");
-// const morgan = require("morgan");
+const passChatAndSenderIds = require("./middleWare/passChatAndSenderIds"); // Импортируем middleware
 const winston = require("winston");
 const app = express();
+app.locals.moment = moment;
 app.use(bodyParser.json());
 const server = http.createServer(app);
 const io = socketIo(server);
@@ -82,26 +85,77 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("Новое подключение:", socket.id);
+  console.log("New client connected:", socket.id);
 
-  // Обработчик получения имени пользователя
   socket.on("set username", (username) => {
     socket.username = username;
   });
 
-  // Пример обработчика сообщений от клиента
   socket.on("chat message", (data) => {
     const message = {
       username: data.username,
-      time: Date.now(), // Отправляем текущее время в миллисекундах
+      time: Date.now(),
       text: data.message,
     };
-
     io.emit("chat message", message);
   });
-  // Здесь вы можете добавить логику для обработки чата между пользователями
-});
 
+  socket.on("disconnect", () => {
+    console.log("Client disconnected:", socket.id);
+  });
+});
+app.use(passChatAndSenderIds);
+
+///////////////////
+io.on("connection", (socket) => {
+  console.log("New connection:", socket.id);
+
+  socket.on("set username", (username) => {
+    socket.username = username;
+  });
+
+  socket.on("message chat", (data) => {
+    const message = {
+      username: data.username,
+      time: Date.now(),
+      text: data.message,
+      sender_id: data.senderId, // Используйте данные, сохраненные в сокете
+      chat_id: data.chatId, // Используйте данные, сохраненные в сокете
+    };
+
+    // Emit the message to all clients
+    io.emit("message chat", message);
+
+    // Insert the message into the database
+    db.run(
+      `INSERT INTO messages (username, time, text, sender_id, chat_id) VALUES (?, ?, ?, ?, ?)`,
+      [
+        message.username,
+        message.time,
+        message.text,
+        message.sender_id,
+        message.chat_id,
+      ],
+
+      (err) => {
+        if (err) {
+          console.error("Error saving message to the database:", err);
+        } else {
+          console.log("Message saved to the database successfully.");
+        }
+      }
+    );
+  });
+});
+///////////////////
+
+// Message event handler
+const handleMessage = (chatId, message) => {
+  io.to(chatId).emit("message chat", message);
+};
+app.set("io", io);
+// Pass the function to your routes
+app.set("handleMessage", handleMessage);
 server.listen(port, () => {
   console.log("Сервер запущен на http://localhost:80");
 });
