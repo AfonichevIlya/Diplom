@@ -7,7 +7,8 @@
   <body>
     <h2>Your Chats</h2>
     <ul>
-      <% chats.forEach(chat => { %>
+      <% chats .filter(chat => chat.user1_id === user.id || chat.user2_id ===
+      user.id) .forEach(chat => { %>
       <li>
         <a href="/chats/<%= chat.id %>"
           >Chat between <%= chat.user1_name %> and <%= chat.user2_name %></a
