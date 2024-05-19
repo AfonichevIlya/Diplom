@@ -265,7 +265,8 @@ db.serialize(() => {
       text TEXT NOT NULL,
       time DATETIME DEFAULT CURRENT_TIMESTAMP,
       sender_id INTEGER,
-      chat_id INTEGER
+      chat_id INTEGER,
+      avatar TEXT
     )
   `);
 
@@ -354,7 +355,7 @@ router.post("/chats", passChatAndSenderIds, (req, res) => {
 router.get("/chats/:id", passChatAndSenderIds, (req, res) => {
   const chatId = req.params.id;
   db.all(
-    `SELECT messages.*, users.name AS sender_username 
+    `SELECT messages.*, users.name AS sender_username, users.avatar AS avatar
     FROM messages 
     JOIN users ON messages.sender_id = users.id 
     WHERE chat_id = ?`,
@@ -375,14 +376,18 @@ router.get("/messages", ensureAuthenticated, (req, res) => {
     res.status(401).send("Unauthorized");
   } else {
     db.all(
-      `SELECT username, text, time FROM messages ORDER BY time ASC`,
+      `SELECT username, text, time, avatar FROM messages ORDER BY time ASC`,
       [],
       (err, rows) => {
         if (err) {
           console.error("Error fetching messages:", err.message); // Log the error
           res.status(500).send("Internal Server Error");
         } else {
-          res.render("chat", { username: req.user.name, messages: rows });
+          res.render("chat", {
+            username: req.user.name,
+            avatar,
+            messages: rows,
+          });
         }
       }
     );
@@ -392,7 +397,7 @@ router.get("/messages", ensureAuthenticated, (req, res) => {
 router.get("/chats/:id/messages", passChatAndSenderIds, (req, res) => {
   const chatId = req.params.id;
   db.all(
-    `SELECT messages.*, users.name AS sender_username 
+    `SELECT messages.*, users.name AS sender_username, users.avatar AS avatar
     FROM messages 
     JOIN users ON messages.sender_id = users.id 
     WHERE chat_id = ?`,
@@ -402,7 +407,7 @@ router.get("/chats/:id/messages", passChatAndSenderIds, (req, res) => {
         console.error("Ошибка получения сообщений:", err);
         return res.status(500).send("Ошибка получения сообщений.");
       }
-      res.json(messages); // Отправляем сообщения в формате JSON
+      res.json(messages); // Отправляем сообщения в формате JSON, включая аватар
     }
   );
 });

@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <% if (locals.user) { %> <%- include('./partials/header'); %> <% } %>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script
-      src="https://kit.fontawesome.com/5833c2855b.js"
-      crossorigin="anonymous"
-    ></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-      crossorigin="anonymous"
-    ></script>
+    <!-- Other head elements -->
     <title>Чат</title>
-    <!-- Подключаем Socket.IO -->
     <script src="/socket.io/socket.io.js"></script>
-    <!-- Подключаем Moment.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <style>
+      /* Add CSS styles for message blocks here */
+      .message {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: #f2f2f2;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+      }
+
+      .message .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      .message .content {
+        flex: 1;
+      }
+    </style>
     <script>
-      // Инициализируем Socket.IO на клиенте
       const socket = io();
 
-      // Обработчик отправки сообщения
       const sendMessage = () => {
         const messageInput = document.getElementById("messageInput");
         const message = messageInput.value;
 
-        // Отправляем сообщение с именем пользователя на сервер
         socket.emit("message chat", {
           message: message,
           username: "<%= user.name %>",
           senderId: "<%= user.id %>",
           chatId: "<%= chatId %>",
+          avatar: "<%= user.avatar %>",
         });
 
         messageInput.value = "";
@@ -47,42 +47,108 @@
 
       socket.on("message chat", (msg) => {
         const messagesList = document.getElementById("messagesList");
-        const li = document.createElement("li");
-        // Формируем текст сообщения с именем пользователя и временем
-        li.textContent = `${msg.username} (${formatTime(msg.time)}): ${
-          msg.text
-        }`;
-        messagesList.appendChild(li);
+
+        // Create message block
+        const messageBlock = document.createElement("div");
+        messageBlock.classList.add("message");
+
+        // Create avatar element
+        const avatar = document.createElement("img");
+        avatar.src = `/avatars/${msg.avatar}`;
+        avatar.alt = "avatar";
+        avatar.classList.add("avatar");
+
+        // Create content container
+        const content = document.createElement("div");
+        content.classList.add("content");
+
+        // Create username element
+        const username = document.createElement("div");
+        username.textContent = msg.username;
+
+        // Create text element
+        const text = document.createElement("div");
+        text.textContent = msg.text;
+
+        // Create time element
+        const time = document.createElement("div");
+        time.textContent = formatTime(msg.time);
+
+        // Append elements to content container
+        content.appendChild(username);
+        content.appendChild(text);
+        content.appendChild(time);
+
+        // Append avatar and content to message block
+        messageBlock.appendChild(avatar);
+        messageBlock.appendChild(content);
+
+        // Append message block to messages list
+        messagesList.appendChild(messageBlock);
       });
 
-      // Функция для форматирования времени с помощью Moment.js
       function formatTime(timeString) {
-        return moment(timeString).format("HH:mm:ss"); // Формат времени по вашему желанию
+        return moment(timeString).format("HH:mm:ss");
       }
-    </script>
-  </head>
-  <body>
-    <h1>Чат</h1>
-    <ul id="messagesList"></ul>
-    <input type="text" id="messageInput" />
-    <button onclick="sendMessage()">Отправить</button>
-    <script>
-      // Функция для загрузки сообщений чата при загрузке страницы
+
       window.onload = function () {
         fetch(`/chats/<%= chatId %>/messages`)
           .then((response) => response.json())
           .then((messages) => {
+            console.log(messages); // Log the received messages to the console
+
             const messagesList = document.getElementById("messagesList");
             messages.forEach((msg) => {
-              const li = document.createElement("li");
-              li.textContent = `${msg.sender_username} (${formatTime(
-                msg.time
-              )}): ${msg.text}`;
-              messagesList.appendChild(li);
+              console.log(msg.avatar);
+            });
+
+            messages.forEach((msg) => {
+              const messageBlock = document.createElement("div");
+              messageBlock.classList.add("message");
+
+              // Create avatar element
+              const avatar = document.createElement("img");
+              avatar.src = `/avatars/${msg.avatar}`;
+              avatar.alt = "avatar";
+              avatar.classList.add("avatar");
+
+              // Create content container
+              const content = document.createElement("div");
+              content.classList.add("content");
+
+              // Create username element
+              const username = document.createElement("div");
+              username.textContent = msg.username;
+
+              // Create text element
+              const text = document.createElement("div");
+              text.textContent = msg.text;
+
+              // Create time element
+              const time = document.createElement("div");
+              time.textContent = formatTime(msg.time);
+
+              // Append elements to content container
+              content.appendChild(username);
+              content.appendChild(text);
+              content.appendChild(time);
+
+              // Append avatar and content to message block
+              messageBlock.appendChild(avatar);
+              messageBlock.appendChild(content);
+
+              // Append message block to messages list
+              messagesList.appendChild(messageBlock);
             });
           })
           .catch((error) => console.error("Ошибка загрузки сообщений:", error));
       };
     </script>
+  </head>
+  <body>
+    <h1>Чат</h1>
+    <div id="messagesList"></div>
+    <input type="text" id="messageInput" />
+    <button onclick="sendMessage()">Отправить</button>
   </body>
 </html>

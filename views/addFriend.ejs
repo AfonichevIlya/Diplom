@@ -10,14 +10,31 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
+    <style>
+      .no-bullets {
+        list-style-type: none; /* Remove bullet points */
+        padding: 0; /* Remove default padding */
+      }
+    </style>
   </head>
   <body>
     <header><%- include('./partials/header') %></header>
 
     <h2>Все пользователи соцсети</h2>
-    <ul>
+    <ul class="no-bullets">
       <% users.forEach(user => { %>
       <li>
+        <img
+          src="/avatars/<%= user.avatar %>"
+          onerror="this.onerror=null;this.src='img/ava.jpg';"
+          alt="Аватар"
+          style="
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+          "
+        />
         <%= user.name %> <% if (locals.user.name !== user.name) { %>
         <!-- Не показывать кнопку для самого себя -->
         <form action="/chats" method="post" style="display: inline">

@@ -46,6 +46,7 @@ app.use(flash());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+
 app.use(express.static(path.join(__dirname, "css")));
 app.use(express.static(path.join(__dirname, "views")));
 app.use("/uploads", express.static("uploads"));
@@ -110,17 +111,14 @@ app.use(passChatAndSenderIds);
 io.on("connection", (socket) => {
   console.log("New connection:", socket.id);
 
-  socket.on("set username", (username) => {
-    socket.username = username;
-  });
-
   socket.on("message chat", (data) => {
     const message = {
       username: data.username,
-      time: Date.now(),
+      time: new Date().toISOString(), // Use ISO string for consistency
       text: data.message,
-      sender_id: data.senderId, // Используйте данные, сохраненные в сокете
-      chat_id: data.chatId, // Используйте данные, сохраненные в сокете
+      sender_id: data.senderId,
+      chat_id: data.chatId,
+      avatar: data.avatar, // Ensure this matches the database field name
     };
 
     // Emit the message to all clients
@@ -128,15 +126,15 @@ io.on("connection", (socket) => {
 
     // Insert the message into the database
     db.run(
-      `INSERT INTO messages (username, time, text, sender_id, chat_id) VALUES (?, ?, ?, ?, ?)`,
+      `INSERT INTO messages (username, time, text, sender_id, chat_id, avatar) VALUES (?, ?, ?, ?, ?, ?)`,
       [
         message.username,
         message.time,
         message.text,
         message.sender_id,
         message.chat_id,
+        message.avatar, // Include avatar in the insert statement
       ],
-
       (err) => {
         if (err) {
           console.error("Error saving message to the database:", err);
@@ -147,6 +145,7 @@ io.on("connection", (socket) => {
     );
   });
 });
+
 ///////////////////
 
 // Message event handler
