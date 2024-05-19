@@ -1,33 +1,626 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Other head elements -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/public/style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
     <title>Чат</title>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <style>
+      @charset "UTF-8";
+      * {
+        font-family: sans-serif;
+      }
+
+      header {
+        top: 0;
+        vertical-align: middle;
+        background-color: #131819;
+      }
+
+      .nav-link {
+        color: white !important;
+      }
+
+      nav.bg-body-tertiary {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        background-color: transparent !important;
+        width: 61%;
+      }
+
+      .file-input-container {
+        position: relative;
+        width: 30px; /* Set the desired width of your icon */
+        height: 30px; /* Set the desired height of your icon */
+        cursor: pointer;
+        display: inline-block;
+        margin-top: 10px;
+        margin-left: 3%;
+        /* Adjust margin as needed */
+      }
+
+      .file-input-container img {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .file-input-container input[type="file"] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      .note-container {
+        background-color: #131819;
+        border-radius: 10px;
+        padding: 10px;
+      }
+
+      textarea.form-control {
+        background-color: rgb(150, 150, 150) !important;
+        border: none !important;
+      }
+
+      .form-control {
+        border: none !important;
+        background-color: rgb(150, 150, 150) !important;
+      }
+
+      .note-content {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      .button-custom {
+        background-color: #1b3430;
+        color: #f1cc9f;
+        border: 1px solid #f1cc9f;
+        border-radius: 20px;
+        padding: 10px 20px;
+        box-shadow: 3px 4px 0px 1.2px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+        display: inline-block;
+        transition: transform 0.4s, background-color 0.4s, box-shadow 0.4s;
+      }
+
+      .button-custom:hover {
+        background-color: #1f4d45;
+        transform: scale(1.12);
+        box-shadow: none;
+      }
+
+      .button-custom:active {
+        transform: scale(0.98);
+        box-shadow: 0px 3px 3px 1.2px rgba(0, 0, 0, 0.2) inset;
+        transition: transform 0.08s;
+      }
+
+      .note-image {
+        max-width: 100%;
+        max-height: 200px;
+        display: none; /* Hide initially */
+        margin-top: 10px;
+        border-radius: 10px;
+      }
+
+      .container33 {
+        display: flex;
+        flex-direction: column;
+        background-color: rgba(15, 29, 30, 0.8352941176);
+        margin-top: -30px;
+        margin-left: 3%;
+        border-radius: 10px;
+        width: 15%;
+        height: -moz-max-content;
+        height: max-content;
+        padding: 1% 2% 1% 2%;
+        line-height: 300%;
+      }
+
+      #menu {
+        margin-right: 0;
+        display: flex;
+        color: #f1cc9f;
+        flex-direction: row;
+        align-items: center;
+        vertical-align: middle;
+        justify-content: space-between;
+      }
+
+      #a11 {
+        right: 0;
+        margin-left: 10px;
+        padding: 10px 25px 10px 25px;
+        text-align: center;
+        background-color: #1a3628 !important;
+        color: #f8c280;
+        text-decoration: none;
+      }
+
+      #a1 {
+        right: 0;
+        margin-left: 10px;
+        padding: 10px 25px 10px 25px;
+        text-align: center;
+        background-color: #2e473b !important;
+        color: #f8c280;
+        text-decoration: none;
+      }
+
+      .klass {
+        background-color: #3a5c3a;
+        border: 1px solid #263326;
+      }
+
+      nav.bg-light {
+        background-color: transparent !important;
+      }
+
+      .navbar-nav .nav-link.active,
+      .navbar-nav .nav-link.show {
+        color: #f8c280;
+      }
+
+      .navbar-brand {
+        font-family: "Rubik One", sans-serif;
+        font-size: 20px;
+        text-transform: uppercase;
+        background: linear-gradient(
+          45deg,
+          #f5be7a 33%,
+          #895f28 56%,
+          #fdd29e 80%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: table;
+        opacity: 0; /* начальное значение непрозрачности */
+        animation: fadeIn ease-in 1; /* добавляем анимацию fadeIn */
+        animation-fill-mode: forwards; /* будет видимым после завершения анимации */
+        animation-duration: 0.5s;
+        margin-left: 7%;
+      }
+
+      .navbar-brand:hover {
+        font-family: "Rubik One", sans-serif;
+        font-size: 20px;
+        text-transform: uppercase;
+        background: linear-gradient(
+          45deg,
+          #81c784 33%,
+          #388e3c 56%,
+          #4caf50 80%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: table;
+        opacity: 0; /* начальное значение непрозрачности */
+        animation: fadeIn ease-in 1; /* добавляем анимацию fadeIn */
+        animation-fill-mode: forwards; /* будет видимым после завершения анимации */
+        animation-duration: 0.5s;
+      }
+
+      img {
+        width: 450px;
+        height: 300px;
+      }
+
+      body {
+        background-color: #232e30 !important;
+      }
+
+      footer {
+        position: absolute;
+        background-color: transparent !important;
+        min-width: 100%;
+      }
+
+      footer.border-top {
+        border: none !important;
+      }
+
+      .text-muted {
+        color: #b2d8b2 !important;
+      }
+
+      .nav-link.px-2 {
+        color: #b2d8b2;
+      }
+
+      .nav-link:hover {
+        color: #99cc99;
+      }
+
+      .container {
+        width: 60% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        background-color: rgba(12, 31, 27, 0.2862745098);
+        padding-top: 50px;
+        padding-bottom: 120px;
+      }
+
+      .container3 {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 70%;
+        background-color: rgba(13, 38, 16, 0.7607843137);
+        padding-top: 50px;
+        padding-bottom: 120px;
+        color: #b2d8b2;
+        text-align: center;
+      }
+
+      .container2 {
+        min-width: 58%;
+        background-color: rgba(13, 38, 16, 0.6509803922);
+        padding-top: 120px;
+        padding-bottom: 120px;
+      }
+
+      .container1 {
+        text-align: center;
+        margin-bottom: auto;
+        min-width: 100%;
+        min-height: 900px;
+        background-color: rgba(255, 255, 255, 0);
+        font-size: 200px !important;
+      }
+
+      .h1,
+      h1 {
+        font-family: "Rubik One", sans-serif;
+        font-size: 150px;
+        text-transform: uppercase;
+        background: linear-gradient(
+          45deg,
+          #275c34 7%,
+          #062649 20%,
+          #113964 60%,
+          #2c62b3 85%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: table;
+        margin: 20px auto;
+        opacity: 0; /* начальное значение непрозрачности */
+        animation: fadeIn ease-in 1; /* добавляем анимацию fadeIn */
+        animation-fill-mode: forwards; /* будет видимым после завершения анимации */
+        animation-duration: 0.5s;
+      }
+
+      .typewriter h4 {
+        text-align: center;
+        font-weight: bold;
+        font-size: 30px;
+        max-width: 940px;
+        text-transform: uppercase;
+        background: linear-gradient(
+          45deg,
+          #275c34 20%,
+          #16385c 37%,
+          #16385c 70%,
+          #2c62b3 85%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        position: absolute;
+        left: 25%;
+        top: 300px;
+        font-family: monospace;
+        margin: 0 auto; /* Centers the h4 element */
+        letter-spacing: 0.15em; /* Adjust as needed */
+        white-space: pre-wrap; /* Allows text wrapping and preserves whitespace */
+      }
+
+      #typewriter2 h5 {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        font-weight: bold;
+        font-size: 30px;
+        max-width: 940px;
+        background-color: rgba(0, 0, 0, 0.6823529412);
+        text-transform: uppercase;
+        color: #6ca36c;
+        padding: 5px;
+        margin-top: 300px;
+      }
+
+      /* Add a class for the blinking cursor */
+      .cursor {
+        display: inline;
+        font-weight: bold;
+        color: #f8c280;
+        animation: blink-caret 0.5s step-end infinite;
+      }
+
+      @keyframes blink-caret {
+        50% {
+          color: transparent;
+        }
+      }
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      .container2 {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 900px;
+        color: #f8c280;
+      }
+
+      .profile-img {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+      }
+
+      .card-body {
+        background-color: #131819;
+        color: #f1cc9f !important;
+        border-radius: 5px;
+        border-color: #f1cc9f !important;
+        border-color: transparent !important;
+        padding: 3% !important;
+        margin-top: 10%;
+      }
+
+      #a2 {
+        background-color: #1b3434;
+        color: #f1cc9f;
+        -webkit-animation: ease-in-out;
+        border: 1px solid #f1cc9f;
+        border-radius: 20px;
+        padding: 10px 20px 10px 20px;
+        box-shadow: 3px 4px 0px 1.2px rgb(0, 0, 0);
+        animation: 1.5s infinite back;
+        transition: 0.4s;
+        text-decoration: none;
+      }
+
+      #a2:hover {
+        background-color: #2d4d4d;
+        color: bisque;
+        transform: scale(1.12);
+        border: 1px solid bisque;
+        box-shadow: none;
+      }
+
+      #a2:active {
+        transform: scale(0.98);
+        box-shadow: 0px 3px 3px 1.2px rgb(0, 0, 0) inset;
+        transition: 0.08s;
+      }
+
+      #a3 {
+        background-color: #483723;
+        color: #f1cc9f;
+        -webkit-animation: ease-in-out;
+        border: 1px solid #f1cc9f;
+        border-radius: 20px;
+        padding: 10px 20px 10px 20px;
+        box-shadow: 3px 4px 0px 1.2px rgb(0, 0, 0);
+        animation: 1.5s infinite back;
+        transition: 0.4s;
+        margin-right: 10px;
+        text-decoration: none;
+      }
+
+      #a3:hover {
+        background-color: #6a5842;
+        color: bisque;
+        transform: scale(1.12);
+        border: 1px solid bisque;
+        box-shadow: none;
+      }
+
+      #a3:active {
+        transform: scale(0.98);
+        box-shadow: 0px 3px 3px 1.2px rgb(0, 0, 0) inset;
+        transition: 0.08s;
+      }
+
+      #a4 {
+        background-color: #172d3b;
+        color: bisque;
+        -webkit-animation: ease-in-out;
+        border: 1px solid bisque;
+        border-radius: 20px;
+        padding: 10px 20px 10px 20px;
+        box-shadow: 3px 4px 0px 1.2px rgb(0, 0, 0);
+        animation: 1.5s infinite back;
+        transition: 0.4s;
+        margin-right: 10px;
+        text-decoration: none;
+      }
+
+      #a4:hover {
+        background-color: #388e3c;
+        color: bisque;
+        transform: scale(1.12);
+        border: 1px solid bisque;
+        box-shadow: none;
+      }
+
+      #a4:active {
+        transform: scale(0.98);
+        box-shadow: 0px 3px 3px 1.2px rgb(0, 0, 0) inset;
+        transition: 0.08s;
+      }
+
+      #sub {
+        background-color: #172d3b;
+        color: bisque;
+        -webkit-animation: ease-in-out;
+        border: 1px solid bisque;
+        border-radius: 20px;
+        padding: 10px 20px 10px 20px;
+        box-shadow: 3px 4px 0px 1.2px rgb(0, 0, 0);
+        animation: 1.5s infinite back;
+        margin-left: 10px;
+        margin-right: 10px;
+        text-decoration: none;
+      }
+
+      #sub:hover {
+        background-color: #2e7d32;
+        color: bisque;
+        transform: scale(1.12);
+        border: 1px solid bisque;
+        box-shadow: none;
+        transition: 0.4s;
+      }
+
+      #sub:active {
+        transform: scale(0.98);
+        box-shadow: 0px 3px 3px 1.2px rgb(0, 0, 0) inset;
+        transition: 0.08s;
+      }
+
+      .navbar-avatar {
+        margin-right: 10px;
+        height: 40px; /* Высота аватара */
+        width: 40px; /* Ширина аватара */
+        border-radius: 50%; /* Сделает изображение круглым */
+        -o-object-fit: cover;
+        object-fit: cover; /* Убедится, что изображение нормально помещается в рамки */
+        border: 1px solid #fff; /* Добавляем белую рамку если захотим */
+        background-color: #aaa; /* Серый фон для серого кружка */
+        display: block; /* Использование блочного отображения */
+      }
+
+      .block {
+        margin-top: 30px;
+        background-color: #0a3a1b;
+        padding: 20px;
+        border-radius: 20px;
+        width: 30%;
+        height: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: start;
+      }
+
+      .block1 {
+        text-align: center;
+        width: -moz-max-content;
+        width: max-content;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* Remove bullet points from list items */
+      ul.navbar-nav {
+        list-style-type: none; /* Remove bullets */
+        padding: 0; /* Remove default padding */
+        margin: 0; /* Remove default margin */
+      }
+
+      /* Additional styling for nav items */
+      .nav-item {
+        display: inline-block;
+        color: #fdd29e; /* Align items horizontally */
+      }
+
+      .nav-link {
+        text-decoration: none; /* Remove underline from links */
+        color: #fdd29e !important; /* Set your desired link color */
+      }
+
+      .nav-link:hover {
+        color: #daa86b !important; /* Set your desired hover color */
+      } /*# sourceMappingURL=style.css.map */
       /* Add CSS styles for message blocks here */
+      .message-container {
+        max-height: 700px; /* Set max height for messages container */
+        overflow-y: auto; /* Enable vertical scrolling */
+        margin-bottom: 20px; /* Add some bottom margin */
+      }
+
       .message {
         margin-bottom: 10px;
-        padding: 10px;
-        background-color: #f2f2f2;
+        padding: 5px 10px 5px 10px;
+        background-color: #283736;
         border-radius: 10px;
         display: flex;
         align-items: center;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 80%; /* Ограничиваем максимальную ширину сообщения */
+        word-wrap: break-word; /* Переносим длинные слова */
+        overflow-wrap: break-word;
+        color: #f1cc9f; /* Переносим длинные слова для браузеров, не поддерживающих word-wrap */
       }
 
       .message .avatar {
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         margin-right: 10px;
       }
 
       .message .content {
         flex: 1;
+        overflow-y: auto; /* Включаем вертикальную прокрутку для содержимого сообщения */
+      }
+      .message .content .time {
+      }
+
+      /* Fixed input styles */
+      #messageInput {
+        width: 25%; /* Adjust width */
+        position: fixed;
+        height: 45px;
+        margin-left: 14.5%;
+        border-radius: 10px;
+        border-color: #f1cc9f;
+        background-color: #131819;
+        color: #f1cc9f;
+        bottom: 6%;
+      }
+
+      #sendMessageBtn {
+        position: fixed;
+        margin-left: 41%;
+        bottom: 6%;
+        background-color: #1b3430;
+        color: #f1cc9f;
+        border: 1px solid #f1cc9f;
+        border-radius: 20px;
+        padding: 10px 20px;
+        box-shadow: 3px 4px 0px 1.2px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+        display: inline-block;
+        transition: transform 0.4s, background-color 0.4s, box-shadow 0.4s;
       }
     </style>
     <script>
+      function scrollToBottom() {
+        const messagesContainer = document.getElementById("messagesContainer");
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
       const socket = io();
 
       const sendMessage = () => {
@@ -46,7 +639,7 @@
       };
 
       socket.on("message chat", (msg) => {
-        const messagesList = document.getElementById("messagesList");
+        const messagesContainer = document.getElementById("messagesContainer");
 
         // Create message block
         const messageBlock = document.createElement("div");
@@ -65,14 +658,14 @@
         // Create username element
         const username = document.createElement("div");
         username.textContent = msg.username;
+        // Create time element
+        const time = document.createElement("div");
+
+        time.textContent = formatTime(msg.time);
 
         // Create text element
         const text = document.createElement("div");
         text.textContent = msg.text;
-
-        // Create time element
-        const time = document.createElement("div");
-        time.textContent = formatTime(msg.time);
 
         // Append elements to content container
         content.appendChild(username);
@@ -83,8 +676,9 @@
         messageBlock.appendChild(avatar);
         messageBlock.appendChild(content);
 
-        // Append message block to messages list
-        messagesList.appendChild(messageBlock);
+        // Append message block to messages container
+        messagesContainer.appendChild(messageBlock);
+        scrollToBottom();
       });
 
       function formatTime(timeString) {
@@ -97,7 +691,8 @@
           .then((messages) => {
             console.log(messages); // Log the received messages to the console
 
-            const messagesList = document.getElementById("messagesList");
+            const messagesContainer =
+              document.getElementById("messagesContainer");
             messages.forEach((msg) => {
               console.log(msg.avatar);
             });
@@ -120,13 +715,12 @@
               const username = document.createElement("div");
               username.textContent = msg.username;
 
-              // Create text element
-              const text = document.createElement("div");
-              text.textContent = msg.text;
-
               // Create time element
               const time = document.createElement("div");
               time.textContent = formatTime(msg.time);
+              // Create text element
+              const text = document.createElement("div");
+              text.textContent = msg.text;
 
               // Append elements to content container
               content.appendChild(username);
@@ -137,8 +731,9 @@
               messageBlock.appendChild(avatar);
               messageBlock.appendChild(content);
 
-              // Append message block to messages list
-              messagesList.appendChild(messageBlock);
+              // Append message block to messages container
+              messagesContainer.appendChild(messageBlock);
+              scrollToBottom();
             });
           })
           .catch((error) => console.error("Ошибка загрузки сообщений:", error));
@@ -146,9 +741,17 @@
     </script>
   </head>
   <body>
-    <h1>Чат</h1>
-    <div id="messagesList"></div>
-    <input type="text" id="messageInput" />
-    <button onclick="sendMessage()">Отправить</button>
+    <header><%- include ('./partials/header') %></header>
+    <div class="container" style="display: flex; flex-direction: row">
+      <div class="container33"><%- include ('./partials/menu') %></div>
+      <div
+        class="container11"
+        style="width: 70%; margin-left: 0%; margin-right: auto; height: 100%"
+      >
+        <div id="messagesContainer" class="message-container"></div>
+      </div>
+      <input type="text" id="messageInput" />
+      <button id="sendMessageBtn" onclick="sendMessage()">Отправить</button>
+    </div>
   </body>
 </html>

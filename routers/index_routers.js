@@ -309,6 +309,7 @@ router.get("/add-friend", (req, res) => {
       console.error("Ошибка получения списка пользователей:", err);
       return res.status(500).send("Ошибка получения списка пользователей.");
     }
+
     res.render("addFriend", { users });
   });
 });
