@@ -21,8 +21,8 @@
     
   
 
-
     <div class="typewriter">
+
       <h4 id="typewriter-text"></h4>
       
       
@@ -133,40 +133,146 @@
             
             </script>
           <% } else { %>
-            <div id="typewriter2"><h5> Пожалуйста, войдите или зарегистрируйтесь, чтобы увидеть контент</h5></div>
-            <script>
-              document.addEventListener('DOMContentLoaded', function() {
-                const typewriterText = document.getElementById('typewriter-text');
-                const text = "Добро пожаловать в VibeCircle!  В VibeCircle мы не просто социальная платформа, мы движение, празднующее позитив, креативность и настоящие связи!";
-                
-                let index = 0;
-                
-                const cursor = document.createElement('span');
-                cursor.className = 'cursor';
-                cursor.textContent = '|';
-                typewriterText.appendChild(cursor);
-                
-                function type() {
-                  if (index < text.length) {
-                    // Remove cursor before adding new character
-                    typewriterText.removeChild(cursor);
-                    // Add next character
-                    typewriterText.textContent += text[index];
-                    // Re-append cursor after new character
-                    typewriterText.appendChild(cursor);
-                    index++;
-                    // Randomize the typing speed between 50ms and 150ms.
-                    setTimeout(type, Math.random() * (40 - 10) + 30);
-                  }
-                }
-                
-  // Start typing
-  type();
-});
-
-</script>
+            <div class="container" style="display: flex; flex-direction: row; ">
+      <div
+        class="container11"
+        style="
+          width: 100%;
+          margin-left: auto;
+          margin-right: auto;
+          margin-bottom: 10%;
+        "
+      >
+        <form
+          style="width: max-content; margin-left: auto; margin-right: auto"
+          class="needs-validation"
+          action="/register"
+          method="post"
+          novalidate=""
+        >
+          <div class="row g-2 g-5">
+            <div class="col-12 col-sm-6">
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Имя"
+                  class="form-control"
+                  required=""
+                />
+                <label for="name" style="color: #f1cc9f">Имя</label>
+                <div class="invalid-feedback" style="color: #f1cc9f">
+                  Пожалуйста, введите ваше имя.
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6">
+              <div class="form-floating mb-3">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Email"
+                  class="form-control <%= typeof emailError !== 'undefined' ? 'is-invalid' : '' %>"
+                  required=""
+                />
+                <label for="email" style="color: #f1cc9f">Email</label>
+                <% if (typeof emailError !== 'undefined') { %>
+                <div
+                  class="invalid-feedback"
+                  style="display: block; color: red"
+                >
+                  <%= emailError %>
+                </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+          <div class="row g-2 g-5">
+            <div class="col-12 col-sm-6">
+              <div class="form-floating mb-3">
+                <input
+                  type="number"
+                  name="age"
+                  id="age"
+                  class="form-control"
+                  placeholder="Возраст"
+                  required=""
+                />
+                <label for="age" style="color: #f1cc9f">Возраст</label>
+                <div class="invalid-feedback" style="color: #f1cc9f">
+                  Пожалуйста, введите ваш возраст.
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6">
+              <div class="form-floating mb-3">
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  class="form-control <%= typeof passwordError !== 'undefined' ? 'is-invalid' : '' %>"
+                  placeholder="Пароль"
+                  required=""
+                />
+                <label for="password" style="color: #f1cc9f">Пароль</label>
+                <% if (typeof passwordError !== 'undefined') { %>
+                <div
+                  class="invalid-feedback"
+                  style="display: block; color: red"
+                >
+                  <%= passwordError %>
+                </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+              <button
+                id="sub"
+                type="submit"
+                class="btn btn-info"
+                style="margin-top: 3%"
+              >
+                Регистрация
+              </button>
+            
+       
+          <div class="row">
+            <div class="col-12 col-sm-12" >
+              <a href="/auth/yandex"
+                ><img
+                  src="/uploads/yandex.png"
+                  style="width: 50px; height: 50px; margin-top: 15px"
+              /></a>
+              <a href="/auth/google"
+                ><img
+                  src="/uploads/google.png"
+                  style="width: 50px; height: 50px; margin-top: 15px"
+              /></a>
+              <a href="/auth/github"
+                ><img
+                  src="/uploads/github.png"
+                  style="width: 50px; height: 50px; margin-top: 15px"
+              /></a>
+              <a href="/auth/vkontakte"
+                ><img
+                  src="/uploads/vk.png"
+                  style="width: 50px; height: 50px; margin-top: 15px"
+              /></a>
+            </div>
+          </div>
+        </div>
+            <div class="col-12 col-sm-6">
+              <a href="login" class="text-decoration-none"
+                >Уже зарегистрированы? Войти</a
+              >
+          </div>
+        </form>
+      </div>
+    </div>
 
 <% } %>
 </body>
-<footer> <%- include ('./partials/footer') %></footer>
 </html>
