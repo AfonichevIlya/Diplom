@@ -84,8 +84,8 @@
             </br>
             <div style="width: max-content; color: #f1cc9f;">
               <h6>Запостил: <%= entry.username %></h6>   
-              <p><%= timeSince(entry.created_at) %></p> <!-- Здесь вызывается функция timeSince -->
-          </div>
+              <!-- <p><%= timeSince(entry.created_at) %></p> -->
+            </div>
                      
             <% if(locals.user && locals.user.role === 'user' && entry.username === locals.user.name){ %>
               <button id="a3">

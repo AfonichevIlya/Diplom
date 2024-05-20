@@ -3,67 +3,24 @@ function timeSince(date) {
 
   let interval = Math.floor(seconds / 31536000);
   if (interval >= 1) {
-    return (
-      interval + " " + pluralize(interval, "год", "года", "лет") + " назад"
-    );
+    return interval + " год" + (interval > 1 ? "а" : "") + " назад";
   }
   interval = Math.floor(seconds / 2592000);
   if (interval >= 1) {
-    return (
-      interval +
-      " " +
-      pluralize(interval, "месяц", "месяца", "месяцев") +
-      " назад"
-    );
+    return interval + " месяц" + (interval > 1 ? "а" : "") + " назад";
   }
   interval = Math.floor(seconds / 86400);
   if (interval >= 1) {
-    return (
-      interval + " " + pluralize(interval, "день", "дня", "дней") + " назад"
-    );
+    return interval + " день" + (interval > 1 ? "ев" : "") + " назад";
   }
   interval = Math.floor(seconds / 3600);
   if (interval >= 1) {
-    return (
-      interval + " " + pluralize(interval, "час", "часа", "часов") + " назад"
-    );
+    return interval + " час" + (interval > 1 ? "ов" : "") + " назад";
   }
   interval = Math.floor(seconds / 60);
   if (interval >= 1) {
-    return (
-      interval +
-      " " +
-      pluralize(interval, "минута", "минуты", "минут") +
-      " назад"
-    );
+    return interval + " минут" + (interval > 1 ? "ы" : "а") + " назад";
   }
-  return (
-    Math.floor(seconds) +
-    " " +
-    pluralize(seconds, "секунда", "секунды", "секунд") +
-    " назад"
-  );
+  return seconds + " секунд" + (seconds > 1 ? "" : "а") + " назад";
 }
-
-function pluralize(
-  value,
-  singularNominative,
-  singularGenitive,
-  pluralGenitive
-) {
-  const valueMod10 = value % 10;
-  const valueMod100 = value % 100;
-
-  if (valueMod100 >= 11 && valueMod100 <= 19) {
-    return pluralGenitive;
-  }
-  if (valueMod10 > 1 && valueMod10 < 5) {
-    return singularGenitive;
-  }
-  if (valueMod10 === 1) {
-    return singularNominative;
-  }
-  return pluralGenitive;
-}
-
 module.exports = timeSince;
