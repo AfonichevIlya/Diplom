@@ -1,13 +1,10 @@
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database("test.sqlite");
-
 const sql =
   "CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT NOT NULL, password TEXT NOT NULL, age INT NOT NULL, role TEXT DEFAULT 'user', avatar TEXT)";
 db.run(sql);
-
 class User {
   constructor() {}
-
   static createGuest(cb) {
     const guestData = {
       name: "гость",
@@ -15,7 +12,6 @@ class User {
       age: 0,
       role: "guest",
     };
-
     cb(null, guestData);
   }
   static create(dataForm, cb) {
@@ -34,7 +30,6 @@ class User {
       }
     );
   }
-
   static findByEmail(email, cb) {
     db.get("SELECT * FROM users WHERE email = ?", email, function (err, row) {
       if (err) {

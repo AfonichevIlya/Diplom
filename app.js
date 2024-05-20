@@ -3,7 +3,6 @@ const favicon = require("express-favicon");
 const fs = require("fs");
 const path = require("path");
 const ejs = require("ejs");
-const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const message = require("./middleware/message");
@@ -13,7 +12,6 @@ const bodyParser = require("body-parser");
 const logger = require("./logger/index");
 const passport = require("passport");
 const passportFunction = require("./middleware/passport_jwt");
-
 const passportFunctionYandex = require("./middleware/passport_yandex");
 const passportFunctionGoogle = require("./middleware/passport_go");
 const passportFunctionGitHub = require("./middleware/passport_github");
@@ -23,15 +21,13 @@ const moment = require("moment");
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database("test.sqlite");
 const http = require("http");
-const passChatAndSenderIds = require("./middleWare/passChatAndSenderIds"); // Импортируем middleware
+const passChatAndSenderIds = require("./middleWare/passChatAndSenderIds");
 const winston = require("winston");
 const app = express();
 app.locals.moment = moment;
 app.use(bodyParser.json());
 const server = http.createServer(app);
 const io = socketIo(server);
-
-// Parse incoming requests with URL-encoded payloads
 app.use(bodyParser.urlencoded({ extended: true }));
 const myRoutes = require("./routers/index_routers");
 const userSession = require("./middleware/user_session");
@@ -108,7 +104,6 @@ io.on("connection", (socket) => {
 });
 app.use(passChatAndSenderIds);
 
-///////////////////
 io.on("connection", (socket) => {
   console.log("New connection:", socket.id);
 
