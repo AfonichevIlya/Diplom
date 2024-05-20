@@ -1,4 +1,7 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav
+  style="height: 70px; display: flex; flex-direction: row"
+  class="navbar bg-body-tertiary"
+>
   <a class="navbar-brand" href="/">VibeCircle </a>
 
   <% if(locals.user) { %>
@@ -24,9 +27,17 @@
   </div>
   <% } else { %>
   <!-- Меню для анонимных пользователей -->
-  <div id="menu">
-    <a id="sub" class="badge rounded-pill" href="/login">Вход</a>
-    <a id="a3" class="badge rounded-pill" href="/register">Регистрация</a>
+  <div style="width: 200px; margin-left: auto; margin-right: 4%" id="menu">
+    <a style="margin-top: -5%" id="sub" class="badge rounded-pill" href="/login"
+      >Вход</a
+    >
+    <a
+      style="margin-top: -5%"
+      id="a3"
+      class="badge rounded-pill"
+      href="/register"
+      >Регистрация</a
+    >
   </div>
   <% } %>
 </nav>

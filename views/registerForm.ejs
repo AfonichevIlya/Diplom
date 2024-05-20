@@ -7,115 +7,148 @@
     <link rel="stylesheet" href="/css/bootstrap.css" />
     <script defer src="./css/bootstrap-5.3.2/dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="style.css" />
-
     <title><%= title %></title>
   </head>
   <body>
     <header><%- include('./partials/header'); %></header>
-    <form action="/register" id="myform" method="post">
-      <section class="register-content">
-        <div class="container-fluid">
-          <h1 class="text-center">Регистрация</h1>
-          <div class="container2">
-
-            <div class="p-3">
-              <div class="row g2 g-5">
-                <div class="col-12 col-sm-6">
-                  <div class="form-floating mb-3 pb-0">
-                    <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    placeholder="Имя"
-                    class="form-control"
-                    required
-                    />
-                    <label for="name">Имя:</label>
-                  </div>
+    <div class="container" style="display: flex; flex-direction: row">
+      <div
+        class="container11"
+        style="
+          width: 100%;
+          margin-left: auto;
+          margin-right: auto;
+          margin-bottom: 10%;
+        "
+      >
+        <form
+          style="width: max-content; margin-left: auto; margin-right: auto"
+          class="needs-validation"
+          action="/register"
+          method="post"
+          novalidate=""
+        >
+          <div class="row g-2 g-5">
+            <div class="col-12 col-sm-6">
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Имя"
+                  class="form-control"
+                  required=""
+                />
+                <label for="name" style="color: #f1cc9f">Имя</label>
+                <div class="invalid-feedback" style="color: #f1cc9f">
+                  Пожалуйста, введите ваше имя.
                 </div>
-                <div class="col-12 col-sm-6">
-                  <div class="form-floating mb-3">
-                    <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="Email"
-                    class="form-control <%= typeof emailError !== 'undefined' ? 'is-invalid' : '' %>"
-                    required
-                    />
-                    <label for="email">Email:</label>
-                    <% if (typeof emailError !== 'undefined') { %>
-                      <div
-                      class="invalid-feedback"
-                      style="display: block; color: red"
-                      >
-                      <%= emailError %>
-                    </div>
-                    <% } %>
-                  </div>
-                </div>
+              </div>
             </div>
-            <div class="row g-2 g-5">
-              <div class="col-12 col-sm-6">
-                <div class="form-floating mb-3">
-                  <input
-                  type="age"
+            <div class="col-12 col-sm-6">
+              <div class="form-floating mb-3">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Email"
+                  class="form-control <%= typeof emailError !== 'undefined' ? 'is-invalid' : '' %>"
+                  required=""
+                />
+                <label for="email" style="color: #f1cc9f">Email</label>
+                <% if (typeof emailError !== 'undefined') { %>
+                <div
+                  class="invalid-feedback"
+                  style="display: block; color: red"
+                >
+                  <%= emailError %>
+                </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+          <div class="row g-2 g-5">
+            <div class="col-12 col-sm-6">
+              <div class="form-floating mb-3">
+                <input
+                  type="number"
                   name="age"
                   id="age"
                   class="form-control"
                   placeholder="Возраст"
-                  required
-                  />
-                  <label for="age">Возраст:</label>
+                  required=""
+                />
+                <label for="age" style="color: #f1cc9f">Возраст</label>
+                <div class="invalid-feedback" style="color: #f1cc9f">
+                  Пожалуйста, введите ваш возраст.
                 </div>
               </div>
-              <div class="col-12 col-sm-6">
-                <div class="form-floating mb-3">
-                  <input
+            </div>
+            <div class="col-12 col-sm-6">
+              <div class="form-floating mb-3">
+                <input
                   type="password"
                   id="password"
                   name="password"
                   class="form-control <%= typeof passwordError !== 'undefined' ? 'is-invalid' : '' %>"
                   placeholder="Пароль"
-                  required
-                  />
-                  <label for="password">Пароль:</label>
-                  <% if (typeof passwordError !== 'undefined') { %>
-                    <div
-                    class="invalid-feedback"
-                    style="display: block; color: red"
-                    >
-                    <%= passwordError %>
-                  </div>
-                  <% } %>
-                </div>
-              </div>
-            </div>
-            <div class="row mt-3">
-              <div class="col-12 col-sm-4">
-                <button type="submit" class="btn btn-info">Регистрация</button>
-              </div>
-            </div>
-            <div class="row g-2 g-5">
-              <div class="col-12 col-sm-12" style="margin-left: 0px">
-                <a  href="/auth/yandex"><img src="/uploads/yandex.png" style="width: 10%;"></a>
-                <a  href="/auth/google"><img src="/uploads/google.png"style="width: 10%;" ></a>
-                <a  href="/auth/github"><img src="/uploads/github.png" style="width: 10%;"></a>
-                <a  href="/auth/vkontakte"><img src="/uploads/vk.png" style="width: 10%;"></a>
-              </div>
-              <div class="col-12 col-sm-6">
-                <a href="login" class="text-decoration-none"
-                >Уже зарегистрированы? Войти</a
+                  required=""
+                />
+                <label for="password" style="color: #f1cc9f">Пароль</label>
+                <% if (typeof passwordError !== 'undefined') { %>
+                <div
+                  class="invalid-feedback"
+                  style="display: block; color: red"
                 >
-            
+                  <%= passwordError %>
+                </div>
+                <% } %>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-    </form>
-  </div>
-    <footer><%- include('./partials/footer')%></footer>
+          <div class="row mt-3">
+            <div class="col-12 col-sm-4 align-items-center">
+              <button
+                id="sub"
+                type="submit"
+                class="btn btn-info"
+                style="margin-top: 3%"
+              >
+                Регистрация
+              </button>
+            </div>
+          </div>
+          <div class="row g-2 g-5">
+            <div class="col-12 col-sm-12" style="margin-left: 0px">
+              <a href="/auth/yandex"
+                ><img
+                  src="/uploads/yandex.png"
+                  style="width: 50px; height: 50px; margin-top: 15px"
+              /></a>
+              <a href="/auth/google"
+                ><img
+                  src="/uploads/google.png"
+                  style="width: 50px; height: 50px; margin-top: 15px"
+              /></a>
+              <a href="/auth/github"
+                ><img
+                  src="/uploads/github.png"
+                  style="width: 50px; height: 50px; margin-top: 15px"
+              /></a>
+              <a href="/auth/vkontakte"
+                ><img
+                  src="/uploads/vk.png"
+                  style="width: 50px; height: 50px; margin-top: 15px"
+              /></a>
+            </div>
+            <div class="col-12 col-sm-6">
+              <a href="login" class="text-decoration-none"
+                >Уже зарегистрированы? Войти</a
+              >
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   </body>
-  </html>
-  
+</html>

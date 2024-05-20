@@ -37,7 +37,7 @@ nav.bg-body-tertiary {
   display: block;
 }
 
-.file-input-container input[type=file] {
+.file-input-container input[type="file"] {
   position: absolute;
   left: 0;
   top: 0;
@@ -192,6 +192,7 @@ img {
 }
 
 body {
+  margin: 0 !important;
   background-color: #232e30 !important;
 }
 
@@ -258,7 +259,13 @@ h1 {
   font-family: "Rubik One", sans-serif;
   font-size: 150px;
   text-transform: uppercase;
-  background: linear-gradient(45deg, #275c34 7%, #062649 20%, #113964 60%, #2c62b3 85%);
+  background: linear-gradient(
+    45deg,
+    #275c34 7%,
+    #062649 20%,
+    #113964 60%,
+    #2c62b3 85%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: table;
@@ -275,7 +282,13 @@ h1 {
   font-size: 30px;
   max-width: 940px;
   text-transform: uppercase;
-  background: linear-gradient(45deg, #275c34 20%, #16385c 37%, #16385c 70%, #2c62b3 85%);
+  background: linear-gradient(
+    45deg,
+    #275c34 20%,
+    #16385c 37%,
+    #16385c 70%,
+    #2c62b3 85%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   position: absolute;
@@ -334,8 +347,7 @@ h1 {
   width: 40px;
   height: 40px;
 }
-
-.card-body {
+.form-floating .card-body {
   background-color: #131819;
   color: #f1cc9f !important;
   border-radius: 5px;
@@ -344,7 +356,9 @@ h1 {
   padding: 3% !important;
   margin-top: 10%;
 }
-
+.needs-validation {
+  line-height: 220%;
+}
 #a2 {
   background-color: #1b3434;
   color: #f1cc9f;
@@ -357,7 +371,19 @@ h1 {
   transition: 0.4s;
   text-decoration: none;
 }
-
+.card-body {
+  margin-top: 10%;
+  width: 100%;
+  background-color: #131819;
+  padding: 20px !important;
+  border-radius: 20px;
+}
+.card-body .card-title {
+  color: #f1cc9f;
+}
+.card-body .card-text {
+  color: #f1cc9f;
+}
 #a2:hover {
   background-color: #2d4d4d;
   color: bisque;
@@ -463,7 +489,7 @@ h1 {
   width: 40px; /* Ширина аватара */
   border-radius: 50%; /* Сделает изображение круглым */
   -o-object-fit: cover;
-     object-fit: cover; /* Убедится, что изображение нормально помещается в рамки */
+  object-fit: cover; /* Убедится, что изображение нормально помещается в рамки */
   border: 1px solid #fff; /* Добавляем белую рамку если захотим */
   background-color: #aaa; /* Серый фон для серого кружка */
   display: block; /* Использование блочного отображения */
@@ -509,4 +535,4 @@ ul.navbar-nav {
 
 .nav-link:hover {
   color: #daa86b !important; /* Set your desired hover color */
-}/*# sourceMappingURL=style.css.map */
+} /*# sourceMappingURL=style.css.map */

@@ -13,6 +13,7 @@ const bodyParser = require("body-parser");
 const logger = require("./logger/index");
 const passport = require("passport");
 const passportFunction = require("./middleware/passport_jwt");
+
 const passportFunctionYandex = require("./middleware/passport_yandex");
 const passportFunctionGoogle = require("./middleware/passport_go");
 const passportFunctionGitHub = require("./middleware/passport_github");

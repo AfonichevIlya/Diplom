@@ -742,7 +742,10 @@
   </head>
   <body>
     <header><%- include ('./partials/header') %></header>
-    <div class="container" style="display: flex; flex-direction: row">
+    <div
+      class="container"
+      style="display: flex; flex-direction: row; min-height: 900px"
+    >
       <div class="container33"><%- include ('./partials/menu') %></div>
       <div
         class="container11"
@@ -754,4 +757,5 @@
       <button id="sendMessageBtn" onclick="sendMessage()">Отправить</button>
     </div>
   </body>
+  <footer><%- include ('./partials/footer') %></footer>
 </html>

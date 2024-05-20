@@ -13,23 +13,32 @@
     <title><%= title %></title>
   </head>
   <body>
-    <h1><%= title %></h1>
-    <div class="container3">
+    <div
+    class="container"
+    style="display: flex; flex-direction: row; min-height: 700px"
+  >
+  <div class="container33"><%- include ('./partials/menu') %></div>
 
+    
+    <div
+    class="container11"
+    style="border-radius: 10%;color: #f1cc9f; background-color:  #232e30;width: 40%; margin-left: 13%; margin-right: auto; height: 100%;"
+    >
+    <div style="width: max-content; margin-left: auto; margin-right: auto; margin-top: 10%; " class="container22">
 
-<div class="block">
-<div class="block1">
-
-    <img src="/avatars/<%= user.avatar %>" onerror="this.onerror=null;this.src='img/ava.jpg';" alt="Аватар" style="width: 200px; height: 200px; border-radius: 50%; margin-bottom: 20px;"/>
-    <form id="avatarForm" action="/profile/avatar" method="post" enctype="multipart/form-data">
-        <input id="avatarInput" type="file" name="avatar" onchange="submitForm()" />
-        <button id="sub" type="button" onclick="triggerFileInput()">Сменить аватар</button>
-    </form>
+        <img src="/avatars/<%= user.avatar %>" onerror="this.onerror=null;this.src='img/ava.jpg';" alt="Аватар" style="width: 200px; height: 200px; border-radius: 50%; margin-bottom: 20px;"/>
+        <form id="avatarForm" action="/profile/avatar" method="post" enctype="multipart/form-data">
+            <input id="avatarInput" type="file" name="avatar" onchange="submitForm()" />
+            <button style="margin-left: 10%;" id="a2" type="button" onclick="triggerFileInput()">Сменить аватар</button>
+        </form>
+        
+        <hr>
+        <h3> <%= user.name %></h3>
+        <p> <%= user.email %></p>
+    </div>
 </div>
-    <hr>
-    <h3> <%= user.name %></h3>
-    <p> <%= user.email %></p>
 </div>
+
 <style>
     /* Скрываем исходный input */
     #avatarInput {

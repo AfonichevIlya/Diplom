@@ -14,19 +14,102 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
-    <header><%- include ('./partials/header') %></header>
+    <style>
+      @charset "UTF-8";
+      * {
+        font-family: sans-serif;
+      }
+
+      header {
+        top: 0;
+        vertical-align: middle;
+        background-color: #131819;
+      }
+
+      .nav-link {
+        color: white !important;
+      }
+
+      nav.bg-body-tertiary {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        background-color: transparent !important;
+        width: 61%;
+      }
+
+      .container {
+        width: 60% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        background-color: rgba(12, 31, 27, 0.2862745098);
+        padding-top: 50px;
+        padding-bottom: 120px;
+        color: #b2d8b2;
+      }
+
+      h2 {
+        color: #f1cc9f;
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        color: #b2d8b2;
+      }
+
+      li {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: #283736;
+        border-radius: 10px;
+        color: #f1cc9f;
+      }
+
+      a {
+        color: #f8c280;
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: #daa86b;
+      }
+
+      body {
+        background-color: #232e30 !important;
+      }
+
+      footer {
+        position: absolute;
+        background-color: transparent !important;
+        min-width: 100%;
+      }
+
+      footer.border-top {
+        border: none !important;
+      }
+
+      .text-muted {
+        color: #b2d8b2 !important;
+      }
+    </style>
   </head>
   <body>
-    <h2>Your Chats</h2>
-    <ul>
-      <% chats .filter(chat => chat.user1_id === user.id || chat.user2_id ===
-      user.id) .forEach(chat => { %>
-      <li>
-        <a href="/chats/<%= chat.id %>"
-          >Chat between <%= chat.user1_name %> and <%= chat.user2_name %></a
-        >
-      </li>
-      <% }) %>
-    </ul>
+    <header><%- include ('./partials/header') %></header>
+    <div class="container">
+      <h2>Your Chats</h2>
+      <ul>
+        <% chats.filter(chat => chat.user1_id === user.id || chat.user2_id ===
+        user.id).forEach(chat => { %>
+        <li>
+          <a href="/chats/<%= chat.id %>">
+            Chat between <%= chat.user1_name %> and <%= chat.user2_name %>
+          </a>
+        </li>
+        <% }) %>
+      </ul>
+    </div>
   </body>
 </html>

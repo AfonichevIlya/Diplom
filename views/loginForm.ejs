@@ -11,18 +11,17 @@
   </head>
   <body>
     <header><%- include('./partials/header'); %></header>
-    <section class="login-content">
-      <h1 class="text-center">Авторизация</h1>
-      <%- include('./partials/messages'); %>
-      <div class="container2">
-      <div class="container-fluid" style="width: 60%; margin-left: auto; margin-right: auto;">
-        
+    <div class="container" style="display: flex; flex-direction: row;">
+    
+        <div class="container11" style="width: 100%; margin-left: auto; margin-right:auto ;margin-bottom: 10%; 
+        ">        
      
-        <form class=" needs-validation" action="/login" method="post" novalidate="">
+        <form style="width: max-content; margin-left: auto; margin-right: auto;" class=" needs-validation" action="/login" method="post" novalidate="">
           <div class="row g-2 g-5">
             <div class="col-12">
               <div class="form-floating mb-3">
                 <input
+               
                 type="email"
                 class="form-control"
                 id="email"
@@ -30,8 +29,8 @@
                 placeholder="name@email.com"
                 required=""
                 />
-                <label for="validationCustom01">Email</label>
-                <div class="invalid-feedback">
+                <label style="color: #f1cc9f;" for="validationCustom01">Email</label>
+                <div style="color: #f1cc9f;" class="invalid-feedback">
                   Пожалуйста, введите ваш email.
                 </div>
               </div>
@@ -49,25 +48,25 @@
                 placeholder="Введите пароль"
                 required=""
                 />
-                <label for="validationCustomPas">Введите пароль</label>
+                <label  style="color: #f1cc9f;" for="validationCustomPas">Введите пароль</label>
                 <% if (typeof errorMessage !== 'undefined') { %>
                   <div style="color: red; margin-top: 5px;" class="error-message"><%= errorMessage %></div>
                 <% } %>
               </div>
-              <label class="form"><input id="eye" type="checkbox" class="password-checkbox"> Показать пароль</label>  
+              <label style="color: #f1cc9f;" class="form"><input id="eye" type="checkbox" class="password-checkbox"> Показать пароль</label>  
             </div>
           </div>
           <div class="row mt-3">
             <div class="col-12 col-sm-4 align-items-center">
-              <button id="sub" type="submit" class="btn btn-info  ">Войти</button>
+              <button id="sub" type="submit" class="btn btn-info  " style="margin-top: 3%;">Войти</button>
             </div>
           </div>
           <div class="row g-2 g-5">
             <div class="col-12 col-sm-12" style="margin-left: 0px">
-              <a  href="/auth/yandex"><img src="/uploads/yandex.png" style="width: 10%;"></a>
-              <a  href="/auth/google"><img src="/uploads/google.png"style="width: 10%;" ></a>
-              <a  href="/auth/github"><img src="/uploads/github.png" style="width: 10%;"></a>
-              <a  href="/auth/vkontakte"><img src="/uploads/vk.png" style="width: 10%;"></a>
+              <a  href="/auth/yandex"><img src="/uploads/yandex.png" style="width: 50px;height: 50px; margin-top: 15px;"></a>
+              <a  href="/auth/google"><img src="/uploads/google.png"style="width: 50px;height: 50px; margin-top: 15px;"  ></a>
+              <a  href="/auth/github"><img src="/uploads/github.png" style="width: 50px;height: 50px; margin-top: 15px;"></a>
+              <a  href="/auth/vkontakte"><img src="/uploads/vk.png" style="width: 50px;height: 50px;    margin-top: 15px;"></a>
             </div>
             <div class="col-12 col-sm-6">
               <a href="register" class="text-decoration-none">Нет аккаунта? Регистрация</a>
@@ -77,7 +76,7 @@
       
         </div>
         </form>
-      </section>
+      </div>
       <script>
         function show() {
           let = document.getElementById('password');
@@ -98,7 +97,6 @@
           }
         }, false);
         </script>
-    <footer><%- include('./partials/footer')%></footer>
   </body>
   </html>
   

@@ -16,6 +16,7 @@
 
 
 <body>
+  
     <header> <%- include ('./partials/header') %></header>
     
   
@@ -26,7 +27,7 @@
       
       
       <% if (locals.user) { %>
-        <div class="container" style="display: flex; flex-direction: row;">
+        <div class="container" style="display: flex; flex-direction: row; min-height: 700px;">
           <div class="container33">
             <%- include ('./partials/menu') %>
           </div>
@@ -71,7 +72,7 @@
           
           <% entries.forEach((entry)=>{ %>
            
-            <div class="card-body" style="min-width: 100%;">
+            <div class="card-body" style="">
               <h5 class="card-title"><%= entry.title %></h5>
               <p class="card-text">
                 <%= entry.content %> 
@@ -81,10 +82,11 @@
               <img src="/images/<%= entry.image %>" alt="Post Image" style="min-width: 100%;">
               <% } %>
             </br>
-            <div style="width: max-content;">
-              <h6>Запостил:   <%= entry.username %> </h6>   
-              <p><%= timeSince(entry.created_at) %></p>
-            </div>             
+            <div style="width: max-content; color: #f1cc9f;">
+              <h6>Запостил: <%= entry.username %></h6>   
+              <p><%= timeSince(entry.created_at) %></p> <!-- Здесь вызывается функция timeSince -->
+          </div>
+                     
             <% if(locals.user && locals.user.role === 'user' && entry.username === locals.user.name){ %>
               <button id="a3">
                 <a href="/update/<%= entry.id %>" style="text-decoration: none; color: bisque;">
@@ -164,7 +166,7 @@
 
 </script>
 
-<footer> <%- include ('./partials/footer') %></footer>
 <% } %>
 </body>
+<footer> <%- include ('./partials/footer') %></footer>
 </html>
